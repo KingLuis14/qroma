@@ -1,0 +1,312 @@
+<dialog id="formDialog">
+  <form method="dialog" class="form-grid">
+    <label for="productoSelect">Prod:</label>
+    <select name="producto" id="productoSelect" required>
+      <option value="">-- Selecciona una Marca--</option>
+    </select>
+
+    <div class="button-panel">
+      <button class="button" type="button" data-marca="CPP">
+        <img
+          src="https://www.cpp.com.pe/public/images/icons/Logo_CPP.svg"
+          alt="cpp"
+        />
+      </button>
+      <button class="button" type="button" data-marca="AC">
+        <img
+          src="https://www.americancolors.com.pe/svg/logo-horizontal.svg"
+          alt="american colors"
+        />
+      </button>
+      <button class="button" type="button" data-marca="VCD">
+        <img
+          src="https://www.vencedor.pe/_nuxt/img/5a735f9.svg"
+          alt="vencedor"
+        />
+      </button>
+      <button class="button" type="button" data-marca="TKN">
+        <img
+          src="https://www.tekno.com.pe/assets/img/logo_tekno.png"
+          alt="tekno"
+        />
+      </button>
+      <button class="button" type="button" data-marca="FST">
+        <img
+          src="https://www.fast.com.pe/assets/img/icons/logo.png"
+          alt="fast"
+        />
+      </button>
+      <button class="button" type="button" data-marca="PAR">
+        <img src="https://www.paracas.com.pe/img/logo.png" alt="paracas" />
+      </button>
+    </div>
+
+    <label for="envaseInput">Env:</label>
+    <select
+      name="producto"
+      id="envaseSelect"
+      style="grid-column: span 1;"
+      required
+    >
+      <option value="">--Env--</option>
+    </select>
+
+    <label for="paquete">Paq:</label>
+    <input type="number" name="paquete" id="paquete" min="1" required />
+
+    <label for="cantidad" style="align-self: self-start;">Cant.:</label>
+    <textarea
+      id="datos"
+      style="grid-column: 2/-1; height: 18vh"
+      placeholder="Ej:\n14,rojo\n25,azul"
+      required></textarea>
+
+    <label id="resultado" style="grid-column: 2/-1;">Total Bultos</label>
+
+    <div class="actions">
+      <button type="submit" class="button green" id="calcularBtn"
+        >Guardar</button
+      >
+      <button
+        type="button"
+        class="button red"
+        onclick="document.getElementById('formDialog').close()">Cancelar</button
+      >
+    </div>
+  </form>
+</dialog>
+
+<style>
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+  }
+
+  dialog {
+    border: none;
+    border-radius: 8px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    background: rgb(0, 0, 0);
+    padding: 1rem;
+    max-width: 500px;
+  }
+  form {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 1rem 0.75rem;
+    align-items: center;
+  }
+  label {
+    font-weight: bold;
+    display: flex;
+    grid-column: span 1;
+  }
+
+  select {
+    grid-column: 2/-1;
+  }
+
+  input {
+    grid-column: span 1;
+    width: 100%;
+  }
+
+  input[name='cantidad'] {
+    grid-column: 2/-1;
+  }
+
+  .actions {
+    display: flex;
+    grid-column: 1 / 5;
+    gap: 1rem;
+
+    & > * {
+      flex: 1;
+    }
+  }
+
+  .button-panel {
+    grid-column: 2 / 5;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    & > button {
+      flex: 1 0 30%;
+      height: 3.5rem;
+      padding: 0;
+
+      & > img {
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+</style>
+
+<script>
+  import productos from '../data/data.json'
+
+  // Helpers
+  const $ = (selector: string) => document.getElementById(selector)
+
+  function getProductosByMarca(marca: string) {
+    return productos.filter((p) => p.marca === marca).map((p) => p.nombre)
+  }
+
+  function getPresentacionesByProducto(nombre: string) {
+    return productos.find((p) => p.nombre === nombre)?.presentaciones ?? []
+  }
+
+  function createSelectOptions(
+    select: HTMLSelectElement,
+    options: string[],
+    placeholder: string,
+  ) {
+    select.innerHTML = `<option value="">-- ${placeholder} --</option>`
+    const fragment = document.createDocumentFragment()
+
+    for (const value of options) {
+      const option = document.createElement('option')
+      option.value = option.textContent = value
+      fragment.appendChild(option)
+    }
+
+    select.appendChild(fragment)
+  }
+
+  function createSelectProduct(marca: string) {
+    const nombres = getProductosByMarca(marca)
+    const select = $('productoSelect') as HTMLSelectElement
+    if (select) createSelectOptions(select, nombres, 'Selecciona un Producto')
+  }
+
+  function createSelectEnvase(producto: string) {
+    const envases = getPresentacionesByProducto(producto).map((p) => p.envase)
+    const select = $('envaseSelect') as HTMLSelectElement
+    if (select) createSelectOptions(select, envases, 'Env')
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const productoSelect = $('productoSelect') as HTMLSelectElement
+    const envaseSelect = $('envaseSelect') as HTMLSelectElement
+    const paqueteInput = $('paquete') as HTMLInputElement
+    const cantidadInput = $('cantidad') as HTMLInputElement
+    const resultadoInput = $('resultado') as HTMLInputElement
+    const guiaInput = $('guia') as HTMLInputElement
+    const datosInput = document.getElementById('datos') as HTMLInputElement
+
+    function calculateResultado() {
+      const expresion = cantidadInput.value.trim()
+      const paquete = parseFloat(paqueteInput.value)
+
+      const numeros = expresion
+        .split('+')
+        .map((num) => parseFloat(num.trim()))
+        .filter((n) => !isNaN(n))
+
+      const total = numeros.reduce((acc, num) => acc + num, 0)
+      const resultado = total / paquete
+
+      resultadoInput.textContent = `Total Bultos: ${total} / ${paquete} = ${resultado}`
+    }
+
+    function procesar() {
+      const texto = datosInput.value.trim()
+
+      const lineas = texto.split('\n')
+
+      const mapa = new Map()
+
+      for (const linea of lineas) {
+        const [cantidadStr, color] = linea.split(',')
+        const cantidad = parseInt(cantidadStr.trim())
+        const colorTrim = color?.trim()
+
+        if (!isNaN(cantidad) && colorTrim) {
+          mapa.set(cantidad, colorTrim)
+        }
+      }
+
+      return mapa
+    }
+
+    document.querySelector('.button-panel')?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement
+      const button = target.closest('button[data-marca]') as HTMLElement
+      if (!button) return
+
+      document.querySelectorAll('button[data-marca]').forEach(btn => btn.removeAttribute('active'))
+
+      button.setAttribute('active', '')
+      const marca = button.dataset.marca!
+      createSelectProduct(marca)
+
+      // Reset envase y paquete
+      if (envaseSelect)
+        envaseSelect.innerHTML = `<option value="">-- Env --</option>`
+      if (paqueteInput) paqueteInput.value = ''
+    })
+
+    productoSelect?.addEventListener('input', () => {
+      
+      createSelectEnvase(productoSelect.value)
+      if (paqueteInput) paqueteInput.value = '' // Limpia también el paquete
+    })
+
+    envaseSelect?.addEventListener('input', () => {
+
+      const presentacion = getPresentacionesByProducto(
+        productoSelect.value,
+      ).find((p) => p.envase === envaseSelect.value)
+      if (presentacion && paqueteInput) {
+        paqueteInput.value = String(presentacion.paquete)
+      }
+    })
+
+    cantidadInput?.addEventListener('input', calculateResultado)
+
+    document.getElementById('calcularBtn')?.addEventListener('click', () => {
+      const producto = productoSelect?.value
+      if (!producto) return
+
+      // Mapa cantidad-color
+      const cantidadMap = procesar() // 👈 devuelve un Map
+
+      // Convertir a objeto plano para guardar
+      const cantidadObj = Object.fromEntries(cantidadMap.entries())
+
+      // Crear la estructura del producto
+      const datosFormulario = {
+        envase: envaseSelect?.value,
+        paquete: paqueteInput?.value,
+        cantidadStr: datosInput.value.trim(),
+        marca: document.querySelector<HTMLElement>(`button[data-marca][active]`)
+          ?.dataset.marca!,
+        cantidad: cantidadObj, // 👈 guardamos el mapa serializado como objeto
+      }
+
+      // Recuperar datos existentes del localStorage
+      const datosGuardados = localStorage.getItem(guiaInput.value)
+      const mapa = datosGuardados
+        ? new Map(Object.entries(JSON.parse(datosGuardados)))
+        : new Map()
+
+      // Actualizar o insertar el producto en el mapa
+
+      console.log(producto, {datosFormulario});
+      
+      mapa.set(producto, datosFormulario)
+
+      // Guardar como string
+      localStorage.setItem(
+        guiaInput.value,
+        JSON.stringify(Object.fromEntries(mapa)),
+      )
+      window.dispatchEvent(new Event('localStorageUpdate'))
+    })
+  })
+</script>

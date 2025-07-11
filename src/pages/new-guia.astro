@@ -1,0 +1,72 @@
+---
+import FormProductDialog from '../components/FormProduct.astro'
+import TableData from '../components/TableData.vue'
+import MainLayout from '../layout/MainLayout.astro'
+---
+
+<MainLayout title="" description="">
+  <h1>Nueva guia</h1>
+  <form id="formPrincipal">
+    <label for="guia">N° Guia</label>
+    <input id="guia" type="tel" name="guia" required />
+    <br />
+    <div>
+      <input class="button green" type="submit" value="Agregar" />
+      <button class="button red" type="button">Finalizar</button>
+    </div>
+  </form>
+
+  <FormProductDialog />
+  <br />
+  <section aria-labelledby="items-guia-heading">
+    <header
+      style=" display: flex; gap: 0.5rem; align-items: center; justify-content: space-between; "
+    >
+      <h2 id="items-guia-heading">Items Guía</h2>
+      <nav aria-label="Opciones de filtro">
+        <ul style=" display: flex; gap: 0.5rem;">
+          <li>
+            <button type="button" class="button disable" id="btn-global"
+              >Global</button
+            >
+          </li>
+          <li>
+            <button type="button" class="button disable" id="btn-tipo"
+              >Tipo</button
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <br />
+
+    <TableData client:load />
+  </section>
+</MainLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById('formPrincipal') as HTMLFormElement
+    const dialog = document.getElementById('formDialog') as HTMLDialogElement
+    const input = document.getElementById('guia') as HTMLInputElement
+    const valorGuardado = localStorage.getItem('guiaActiva')
+
+    if (input && valorGuardado) {
+      input.value = valorGuardado
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      if (form.checkValidity()) {
+        dialog.showModal()
+        localStorage.setItem(
+          'guiaActiva',
+          document.querySelector<HTMLInputElement>('#guia')?.value || '',
+        )
+      } else {
+        form.reportValidity()
+      }
+    })
+  })
+</script>

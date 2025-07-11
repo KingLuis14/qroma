@@ -1,0 +1,325 @@
+[
+  {
+    "nombre": "AC MATE",
+    "marca": "AC",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 2 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "AC SATINADO",
+    "marca": "AC",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 2 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "AC SEMI SATINADO",
+    "marca": "AC",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 2 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "AC ULTRA LAVABLE SATINADO",
+    "marca": "AC",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 2 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP ANTICORROSIVO",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP BARRIO",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP DURALATEX",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP IMPRIMANTE",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP IMPRIMANTE MUROS",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP OLEO MATE",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PATO",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP PATO ANTICORROSIVO",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PATO BASE AL ACEITE",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PATO BASE ZINCROMATO",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PATO PLUS",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP PATO SINTETICO",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PINTOR",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP PASTA FINA",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 2 },
+      { "envase": "3.5GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP SAT",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP SELLADOR",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "CPP SUPER GLOSS",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "CPP TEMPLE PATO 25KG BOLSA",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "BOLSA", "paquete": 1 }]
+  },
+  {
+    "nombre": "CPP TEMPLE PATO 25KG CAJA",
+    "marca": "CPP",
+    "presentaciones": [{ "envase": "CAJA", "paquete": 1 }]
+  },
+  {
+    "nombre": "FST ESMALTE SUPERIOR",
+    "marca": "FST",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "FST MATE",
+    "marca": "FST",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "FST SATINADO",
+    "marca": "FST",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "PAR BARNIZ",
+    "marca": "PAR",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "PAR BARNIZ MARINO",
+    "marca": "PAR",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "PAR BASE PROXILINA",
+    "marca": "PAR",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "PAR LACA SELLADORA CLASICA",
+    "marca": "PAR",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "PAR REDUCTOR",
+    "marca": "PAR",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 }
+    ]
+  },
+  {
+    "nombre": "PAR TINTE ALCOHOL",
+    "marca": "PAR",
+    "presentaciones": [{ "envase": "CAJA X 12", "paquete": 12 }]
+  },
+
+  {
+    "nombre": "TKN BARNIZ DOBLE ACCION",
+    "marca": "TKN",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "TKN BARNIZ MARINO",
+    "marca": "TKN",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "TKN BARNIZ T-81",
+    "marca": "TKN",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "TKN COLOR",
+    "marca": "TKN",
+   "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "TKN DD A5",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 }
+    ]
+  },
+  {
+    "nombre": "TKN DD B5",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 }
+    ]
+  },
+  {
+    "nombre": "TKN MOISTEK",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "TKN REDUCTOR",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 }
+    ]
+  },
+  {
+    "nombre": "TKN TEKNOCOLA CAJA",
+    "marca": "TKN",
+    "presentaciones": [{ "envase": "CAJA", "paquete": 20 }]
+  },
+  {
+    "nombre": "TKN TEKNOCOLA ULTRA",
+    "marca": "TKN",
+    "presentaciones": [{ "envase": "1GL", "paquete": 4 }]
+  },
+  {
+    "nombre": "TKN TEROCHAP",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "1/4GL", "paquete": 9 }
+    ]
+  },
+  {
+    "nombre": "VCD SATINADO",
+    "marca": "VCD",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "VCD SUPERMAT",
+    "marca": "VCD",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "VCD SUPERMAT 3AC",
+    "marca": "VCD",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  },
+  {
+    "nombre": "VCD VENCELATEX",
+    "marca": "VCD",
+    "presentaciones": [
+      { "envase": "1/4GL", "paquete": 9 },
+      { "envase": "1GL", "paquete": 4 },
+      { "envase": "4GL", "paquete": 1 }
+    ]
+  }
+]
