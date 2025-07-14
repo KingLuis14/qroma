@@ -161,6 +161,12 @@
     return productos.find((p) => p.nombre === nombre)?.presentaciones ?? []
   }
 
+  function getTipoProduct(nombre: string, envase: string) {
+    return getPresentacionesByProducto(nombre).find(
+      (pro) => pro.envase === envase,
+    )?.tipo
+  }
+
   function createSelectOptions(
     select: HTMLSelectElement,
     options: string[],
@@ -214,7 +220,7 @@
       resultadoInput.textContent = `Total Bultos: ${total} / ${paquete} = ${resultado}`
     }
 
-    function procesar() {
+    function procesar(paquete: number) {
       const texto = datosInput.value.trim()
 
       const lineas = texto.split('\n')
@@ -225,9 +231,10 @@
         const [cantidadStr, color] = linea.split(',')
         const cantidad = parseInt(cantidadStr.trim())
         const colorTrim = color?.trim()
+        const [paq, uni] = [Math.floor(cantidad / paquete), cantidad % paquete]
 
         if (!isNaN(cantidad) && colorTrim) {
-          mapa.set(cantidad, colorTrim)
+          mapa.set(cantidad, { color: colorTrim, paq, uni })
         }
       }
 
@@ -239,7 +246,9 @@
       const button = target.closest('button[data-marca]') as HTMLElement
       if (!button) return
 
-      document.querySelectorAll('button[data-marca]').forEach(btn => btn.removeAttribute('active'))
+      document
+        .querySelectorAll('button[data-marca]')
+        .forEach((btn) => btn.removeAttribute('active'))
 
       button.setAttribute('active', '')
       const marca = button.dataset.marca!
@@ -252,13 +261,11 @@
     })
 
     productoSelect?.addEventListener('input', () => {
-      
       createSelectEnvase(productoSelect.value)
       if (paqueteInput) paqueteInput.value = '' // Limpia también el paquete
     })
 
     envaseSelect?.addEventListener('input', () => {
-
       const presentacion = getPresentacionesByProducto(
         productoSelect.value,
       ).find((p) => p.envase === envaseSelect.value)
@@ -274,7 +281,7 @@
       if (!producto) return
 
       // Mapa cantidad-color
-      const cantidadMap = procesar() // 👈 devuelve un Map
+      const cantidadMap = procesar(Number(paqueteInput?.value)) // 👈 devuelve un Map
 
       // Convertir a objeto plano para guardar
       const cantidadObj = Object.fromEntries(cantidadMap.entries())
@@ -283,10 +290,11 @@
       const datosFormulario = {
         envase: envaseSelect?.value,
         paquete: paqueteInput?.value,
-        cantidadStr: datosInput.value.trim(),
+        cantidadTextArea: datosInput.value.trim(),
         marca: document.querySelector<HTMLElement>(`button[data-marca][active]`)
           ?.dataset.marca!,
-        cantidad: cantidadObj, // 👈 guardamos el mapa serializado como objeto
+        tipo: getTipoProduct(producto, envaseSelect?.value),
+        cantidades: cantidadObj,
       }
 
       // Recuperar datos existentes del localStorage
@@ -297,8 +305,8 @@
 
       // Actualizar o insertar el producto en el mapa
 
-      console.log(producto, {datosFormulario});
-      
+      // console.log(producto, { datosFormulario })
+
       mapa.set(producto, datosFormulario)
 
       // Guardar como string

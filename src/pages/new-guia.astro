@@ -5,14 +5,24 @@ import MainLayout from '../layout/MainLayout.astro'
 ---
 
 <MainLayout title="" description="">
+
+  <button onclick="history.back()">Volver atrás</button>
+  <br />
   <h1>Nueva guia</h1>
+  <br />
   <form id="formPrincipal">
     <label for="guia">N° Guia</label>
     <input id="guia" type="tel" name="guia" required />
     <br />
+    <br />
     <div>
       <input class="button green" type="submit" value="Agregar" />
-      <button class="button red" type="button">Finalizar</button>
+      <button
+        class="button red"
+        type="button"
+        onclick="localStorage.clear(); location.reload();"
+        >Finalizar</button
+      >
     </div>
   </form>
 
@@ -31,17 +41,24 @@ import MainLayout from '../layout/MainLayout.astro'
             >
           </li>
           <li>
-            <button type="button" class="button disable" id="btn-tipo"
-              >Tipo</button
-            >
+            <button type="button" class="button disable" id="btn-tipo">
+              Tipo
+            </button>
+          </li>
+          <li>
+            <button type="button" class="button disable" id="btn-bulto">
+              Bulto
+            </button>
           </li>
         </ul>
       </nav>
     </header>
     <br />
+    <br />
 
     <TableData client:load />
   </section>
+  <br />
 </MainLayout>
 
 <script>
@@ -51,11 +68,36 @@ import MainLayout from '../layout/MainLayout.astro'
     const input = document.getElementById('guia') as HTMLInputElement
     const valorGuardado = localStorage.getItem('guiaActiva')
 
+    const nav = document.querySelector('nav[aria-label="Opciones de filtro"]')!
+
+    const eventosVista: Record<string, string> = {
+      'btn-global': 'localStorageUpdate',
+      'btn-tipo': 'vista:tipo',
+      'btn-bulto': 'vista:bulto',
+    }
+
+    nav?.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest('button')
+      if (!target || !target.id || !(target.id in eventosVista)) return
+
+      // Quitar clase .green a todos los botones hijos
+      nav
+        .querySelectorAll('button')
+        .forEach((btn) => btn.classList.remove('green'))
+
+      // Agregar clase .green al botón activo
+      target.classList.add('green')
+
+      // Lanzar el evento correspondiente
+      const evento = eventosVista[target.id]
+      window.dispatchEvent(new CustomEvent(evento))
+    })
+
     if (input && valorGuardado) {
       input.value = valorGuardado
     }
 
-    form.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', (e) => {
       e.preventDefault()
 
       if (form.checkValidity()) {

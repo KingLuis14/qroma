@@ -9,9 +9,12 @@
       <ul class="item__list">
         <li>{{ item.producto }}</li>
         <li>Envase: {{ item.envase }}</li>
-        <li>Tipo: {{ determinarTipoEnvase(item.envase) }}</li>
-        <li>Cantidad: {{ item.cantidad }}</li>
-        <li>Bulto: {{ describirProducto(item.cantidad, item.paquete,item.envase) }}</li>
+        <li>Tipo: {{ item.tipo }}</li>
+        <li>
+          Cantidad: 
+          {{ item.cantidadExpresion ? item.cantidadExpresion : item.cantidad }}
+        </li>
+        <li class="title">Bulto: {{ formatearBultos(item) }}</li>
       </ul>
       <div class="item__controls">
         <button
@@ -20,75 +23,64 @@
         >
           +
         </button>
-        <button class="button item__btnEliminar" @click="$emit('remove', item)">
-          x
-        </button>
+        <button class="button item__btnEliminar">x</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  item: {
-    producto: string
-    envase: string
-    cantidad: number
-    paquete: number
-  }
-}>()
-
-defineEmits<{
-  (e: 'increment', item: any): void
-  (e: 'remove', item: any): void
-}>()
-
-function determinarTipoEnvase(envase: string): string {
-  const formato = envase.toLowerCase().replace(/\s/g, '')
-
-  if (formato === '1/4gl') return 'botella'
-  if (formato === '1gl') return 'paq'
-  if (formato === '3.5gl' || formato === '4gl') return 'balde'
-
-  return 'otro'
+type ItemStorage = {
+  producto: string
+  envase: string
+  paquete: number
+  cantidadTextArea: string
+  cantidadExpresion?: string
+  marca: string
+  tipo: 'balde' | 'paq'
+  cantidades: Record<
+    string,
+    {
+      color: string
+      paq: number
+      uni: number
+    }
+  >
 }
 
-function describirProducto(cantidad: number, paquete: number, envase: string): string {
-  const tipo = determinarTipoEnvase(envase)
-
-  if (tipo === 'balde') {
-    return `${cantidad} baldes`
-  }
-
-  if (tipo === 'paq') {
-    const paquetes = Math.floor(cantidad / paquete)
-    const unidades = cantidad % paquete
-
-    const resultado = []
-
-    if (paquetes > 0) {
-      resultado.push(`${paquetes} paq x ${paquete}`)
-    }
-
-    if (unidades > 0) {
-      resultado.push(`${unidades} uni`)
-    }
-
-    return resultado.length ? resultado.join(' + ') : '0 unidades'
-  }
-
-  // Para 'botella' u otros, solo indicar unidades
-  return `${cantidad} uni`
+type Item = Omit<ItemStorage, 'cantidad'> & {
+  cantidad: number
+  color: string
+  paq: number
+  uni: number
 }
 
+const props = defineProps<{
+  item: Item
+}>()
+
+const emit = defineEmits<{
+  (event: 'increment', item: ItemStorage | Item): void
+}>()
+
+const formatearBultos = (item: Item) => {
+  if (item.tipo === 'balde') {
+    return `${item.cantidad} baldes`
+  }
+
+  return (
+    `${item.paq} paq x ${item.paquete}` +
+    (item.uni > 0 ? ` + ${item.uni} uni` : '')
+  )
+}
 </script>
 
 <style scoped>
 .item {
   display: grid;
-  grid-template-columns: 30% 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  grid-template-columns: 28% 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 .item__content {
   position: relative;
@@ -97,6 +89,7 @@ function describirProducto(cantidad: number, paquete: number, envase: string): s
   display: flex;
   flex-direction: column;
   height: 100%;
+  gap: 0.3rem;
   /* background-color: rgba(172, 255, 47, 0.371); */
 }
 .item__list > li:last-child {
