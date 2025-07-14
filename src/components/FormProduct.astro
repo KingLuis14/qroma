@@ -228,13 +228,18 @@
       const mapa = new Map()
 
       for (const linea of lineas) {
-        const [cantidadStr, color] = linea.split(',')
-        const cantidad = parseInt(cantidadStr.trim())
-        const colorTrim = color?.trim()
-        const [paq, uni] = [Math.floor(cantidad / paquete), cantidad % paquete]
+        if (!linea.trim()) continue
 
-        if (!isNaN(cantidad) && colorTrim) {
-          mapa.set(cantidad, { color: colorTrim, paq, uni })
+        const partes = linea.split(',').map((p) => p.trim())
+        const cantidadStr = partes[0]
+        const color = partes[1] || 'estandar' // color por defecto
+
+        const cantidad = parseInt(cantidadStr, 10)
+
+        if (!isNaN(cantidad)) {
+          const paq = Math.floor(cantidad / paquete)
+          const uni = cantidad % paquete
+          mapa.set(cantidad, { color, paq, uni })
         }
       }
 
@@ -315,6 +320,36 @@
         JSON.stringify(Object.fromEntries(mapa)),
       )
       window.dispatchEvent(new Event('localStorageUpdate'))
+      // resetearFormulario();
     })
+
+
+    
+    function resetearFormulario() {
+  const dialog = document.getElementById('formDialog') as HTMLDialogElement | null
+  const form = dialog?.querySelector('form') as HTMLFormElement | null
+
+  if (!dialog || !form) return
+
+  form.reset()
+
+  // Elementos individuales con tipado
+  const productoSelect = document.getElementById('productoSelect') as HTMLSelectElement
+  const envaseSelect = document.getElementById('envaseSelect') as HTMLSelectElement
+  const paqueteInput = document.getElementById('paquete') as HTMLInputElement
+  const datosTextarea = document.getElementById('datos') as HTMLTextAreaElement
+  const resultadoLabel = document.getElementById('resultado') as HTMLLabelElement
+
+  // Reseteo explícito
+  productoSelect.value = ''
+  envaseSelect.value = ''
+  paqueteInput.value = ''
+  datosTextarea.value = ''
+  resultadoLabel.textContent = 'Total Bultos'
+
+  
+}
+
+
   })
 </script>
