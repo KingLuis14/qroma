@@ -1,17 +1,23 @@
 <template>
   <div class="item">
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png"
-      alt=""
-      class="item__img"
-    />
+    <div class="item__imgWrapper" :data-type="item.tipo">
+      <img
+        :src="
+          item.img ||
+          'https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png'
+        "
+        alt=""
+        class="item__img"
+      />
+    </div>
+
     <div class="item__content">
       <ul class="item__list">
         <li>{{ item.producto }}</li>
         <li>Envase: {{ item.envase }}</li>
-        <li>Tipo: {{ item.tipo }}</li>
+        <!-- <li>Tipo: {{ item.tipo }}</li> -->
         <li>
-          Cantidad: 
+          Cantidad:
           {{ item.cantidadExpresion ? item.cantidadExpresion : item.cantidad }}
         </li>
         <li class="title">Bulto: {{ formatearBultos(item) }}</li>
@@ -30,23 +36,7 @@
 </template>
 
 <script setup lang="ts">
-type ItemStorage = {
-  producto: string
-  envase: string
-  paquete: number
-  cantidadTextArea: string
-  cantidadExpresion?: string
-  marca: string
-  tipo: 'balde' | 'paq'
-  cantidades: Record<
-    string,
-    {
-      color: string
-      paq: number
-      uni: number
-    }
-  >
-}
+import type { ItemStorage } from '../interfaces/Item'
 
 type Item = Omit<ItemStorage, 'cantidad'> & {
   cantidad: number
@@ -118,4 +108,33 @@ const formatearBultos = (item: Item) => {
   background-color: #e2282b;
   padding: 0;
 }
+
+.item__imgWrapper {
+  position: relative;
+  overflow: hidden;
+
+  &[data-type]::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.3em 0.6em;
+    color: #fff;
+    font-weight: bold;
+    font-size: .85rem;
+    /* border-radius: 0 0.5em 0.5em 0; */
+    content: attr(data-type);
+    background-color: var(--type-color);
+     transform: rotate(-10deg); 
+     transform-origin: left bottom;
+  }
+
+  &[data-type='paq'] {
+    --type-color: crimson;
+  }
+
+  &[data-type='balde'] {
+    --type-color: rgb(70, 188, 30);
+  }
+}
+
 </style>

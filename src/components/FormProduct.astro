@@ -8,19 +8,20 @@
     <div class="button-panel">
       <button class="button" type="button" data-marca="CPP">
         <img
-          src="https://www.cpp.com.pe/public/images/icons/Logo_CPP.svg"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjXDelH1iRVs_FjU8afg4fEv385agmAGfHmA&s://www.cpp.com.pe/public/images/icons/Logo_CPP.svg"
           alt="cpp"
+          style="background-color: red;"
         />
       </button>
       <button class="button" type="button" data-marca="AC">
         <img
-          src="https://www.americancolors.com.pe/svg/logo-horizontal.svg"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvBYGT2wIYLHnebsV95wAuxU3us9iOqT4ylQ&s"
           alt="american colors"
         />
       </button>
       <button class="button" type="button" data-marca="VCD">
         <img
-          src="https://www.vencedor.pe/_nuxt/img/5a735f9.svg"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToYun84zQNvNj6KwIuBaKxPmsz8MJ01w75JA&s://www.vencedor.pe/_nuxt/img/5a735f9.svg"
           alt="vencedor"
         />
       </button>
@@ -32,12 +33,17 @@
       </button>
       <button class="button" type="button" data-marca="FST">
         <img
-          src="https://www.fast.com.pe/assets/img/icons/logo.png"
+          src="https://cooper.pe/wp-content/uploads/2022/03/logo4.png"
           alt="fast"
+          style="background-color: rgb(255, 255, 255);"
         />
       </button>
       <button class="button" type="button" data-marca="PAR">
-        <img src="https://www.paracas.com.pe/img/logo.png" alt="paracas" />
+        <img
+          src="https://www.paracas.com.pe/img/logo.png"
+          alt="paracas"
+          style="background-color: rgb(255, 255, 255);"
+        />
       </button>
     </div>
 
@@ -52,9 +58,9 @@
     </select>
 
     <label for="paquete">Paq:</label>
-    <input type="number" name="paquete" id="paquete" min="1" required />
+    <input type="number" name="paquete" id="paquete" required />
 
-    <label for="cantidad" style="align-self: self-start;">Cant.:</label>
+    <label for="datos" style="align-self: self-start;">Cant.:</label>
     <textarea
       id="datos"
       style="grid-column: 2/-1; height: 18vh"
@@ -142,6 +148,14 @@
       & > img {
         height: 100%;
         object-fit: contain;
+        filter: grayscale(1);
+      }
+
+      &[active] {
+        > img {
+          filter: grayscale(0);
+          outline: 1.2px solid #3bc836;
+        }
       }
     }
   }
@@ -200,32 +214,43 @@
     const productoSelect = $('productoSelect') as HTMLSelectElement
     const envaseSelect = $('envaseSelect') as HTMLSelectElement
     const paqueteInput = $('paquete') as HTMLInputElement
-    const cantidadInput = $('cantidad') as HTMLInputElement
     const resultadoInput = $('resultado') as HTMLInputElement
     const guiaInput = $('guia') as HTMLInputElement
     const datosInput = document.getElementById('datos') as HTMLInputElement
 
-    function calculateResultado() {
-      const expresion = cantidadInput.value.trim()
-      const paquete = parseFloat(paqueteInput.value)
-
-      const numeros = expresion
-        .split('+')
-        .map((num) => parseFloat(num.trim()))
-        .filter((n) => !isNaN(n))
-
-      const total = numeros.reduce((acc, num) => acc + num, 0)
-      const resultado = total / paquete
-
-      resultadoInput.textContent = `Total Bultos: ${total} / ${paquete} = ${resultado}`
-    }
-
-    function procesar(paquete: number) {
+    function calcularTotalEnTiempoReal(paquete: number) {
       const texto = datosInput.value.trim()
-
       const lineas = texto.split('\n')
 
-      const mapa = new Map()
+      let total = 0
+      const sumandos: number[] = []
+
+      for (const linea of lineas) {
+        if (!linea.trim()) continue
+
+        const partes = linea.split(',').map((p) => p.trim())
+        const cantidadStr = partes[0]
+        const cantidad = parseInt(cantidadStr, 10)
+
+        if (!isNaN(cantidad)) {
+          total += cantidad
+          sumandos.push(cantidad)
+        }
+      }
+
+      if (resultadoInput) {
+        resultadoInput.textContent = `Total Bultos : ${sumandos.join(' + ')} = ${total}`
+      }
+    }
+
+    function procesarTextArea(paquete: number) {
+      const texto = datosInput.value.trim()
+      const lineas = texto.split('\n')
+
+      const mapa = new Map<
+        number,
+        { color: string; paq: number; uni: number }[]
+      >()
 
       for (const linea of lineas) {
         if (!linea.trim()) continue
@@ -239,7 +264,15 @@
         if (!isNaN(cantidad)) {
           const paq = Math.floor(cantidad / paquete)
           const uni = cantidad % paquete
-          mapa.set(cantidad, { color, paq, uni })
+
+          const item = { color, paq, uni }
+
+          // Si ya existe la llave, agregamos al array; si no, lo creamos
+          if (mapa.has(cantidad)) {
+            mapa.get(cantidad)!.push(item)
+          } else {
+            mapa.set(cantidad, [item])
+          }
         }
       }
 
@@ -279,14 +312,16 @@
       }
     })
 
-    cantidadInput?.addEventListener('input', calculateResultado)
+    datosInput?.addEventListener('input', () => {
+      calcularTotalEnTiempoReal(+paqueteInput?.value)
+    })
 
     document.getElementById('calcularBtn')?.addEventListener('click', () => {
       const producto = productoSelect?.value
       if (!producto) return
 
       // Mapa cantidad-color
-      const cantidadMap = procesar(Number(paqueteInput?.value)) // 👈 devuelve un Map
+      const cantidadMap = procesarTextArea(Number(paqueteInput?.value)) // 👈 devuelve un Map
 
       // Convertir a objeto plano para guardar
       const cantidadObj = Object.fromEntries(cantidadMap.entries())
@@ -294,7 +329,8 @@
       // Crear la estructura del producto
       const datosFormulario = {
         envase: envaseSelect?.value,
-        paquete: paqueteInput?.value,
+        paquete: +paqueteInput?.value,
+        img: document.querySelector<HTMLElement>(`button[data-marca][active]`)?.querySelector('img')?.src,
         cantidadTextArea: datosInput.value.trim(),
         marca: document.querySelector<HTMLElement>(`button[data-marca][active]`)
           ?.dataset.marca!,
@@ -310,46 +346,48 @@
 
       // Actualizar o insertar el producto en el mapa
 
-      // console.log(producto, { datosFormulario })
-
       mapa.set(producto, datosFormulario)
 
-      // Guardar como string
       localStorage.setItem(
         guiaInput.value,
         JSON.stringify(Object.fromEntries(mapa)),
       )
       window.dispatchEvent(new Event('localStorageUpdate'))
-      // resetearFormulario();
     })
 
-
-    
     function resetearFormulario() {
-  const dialog = document.getElementById('formDialog') as HTMLDialogElement | null
-  const form = dialog?.querySelector('form') as HTMLFormElement | null
+      const dialog = document.getElementById(
+        'formDialog',
+      ) as HTMLDialogElement | null
+      const form = dialog?.querySelector('form') as HTMLFormElement | null
 
-  if (!dialog || !form) return
+      if (!dialog || !form) return
 
-  form.reset()
+      form.reset()
 
-  // Elementos individuales con tipado
-  const productoSelect = document.getElementById('productoSelect') as HTMLSelectElement
-  const envaseSelect = document.getElementById('envaseSelect') as HTMLSelectElement
-  const paqueteInput = document.getElementById('paquete') as HTMLInputElement
-  const datosTextarea = document.getElementById('datos') as HTMLTextAreaElement
-  const resultadoLabel = document.getElementById('resultado') as HTMLLabelElement
+      // Elementos individuales con tipado
+      const productoSelect = document.getElementById(
+        'productoSelect',
+      ) as HTMLSelectElement
+      const envaseSelect = document.getElementById(
+        'envaseSelect',
+      ) as HTMLSelectElement
+      const paqueteInput = document.getElementById(
+        'paquete',
+      ) as HTMLInputElement
+      const datosTextarea = document.getElementById(
+        'datos',
+      ) as HTMLTextAreaElement
+      const resultadoLabel = document.getElementById(
+        'resultado',
+      ) as HTMLLabelElement
 
-  // Reseteo explícito
-  productoSelect.value = ''
-  envaseSelect.value = ''
-  paqueteInput.value = ''
-  datosTextarea.value = ''
-  resultadoLabel.textContent = 'Total Bultos'
-
-  
-}
-
-
+      // Reseteo explícito
+      productoSelect.value = ''
+      envaseSelect.value = ''
+      paqueteInput.value = ''
+      datosTextarea.value = ''
+      resultadoLabel.textContent = 'Total Bultos'
+    }
   })
 </script>

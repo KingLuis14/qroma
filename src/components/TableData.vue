@@ -19,7 +19,7 @@
 
     <!-- Vista original -->
     <div v-else>
-      <ItemStorage
+      <Item
         v-for="(item, i) in items"
         :key="i"
         :item="item"
@@ -27,7 +27,7 @@
       />
       <div>
         <h2>Total de Bultos</h2>
-        <br>
+        <br />
         {{
           resumen.reduce((acc, item) => acc + item.totalPaq + item.totalUni, 0)
         }}
@@ -39,25 +39,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import ItemStorage from './Item.vue'
-
-type ItemStorage = {
-  producto: string
-  envase: string
-  paquete: number
-  cantidadTextArea: string
-  cantidadExpresion?: string
-  marca: string
-  tipo: 'balde' | 'paq'
-  cantidades: Record<
-    string,
-    {
-      color: string
-      paq: number
-      uni: number
-    }
-  >
-}
+import Item from './Item.vue'
+import type { ItemStorage } from '../interfaces/Item'
 
 type Item = Omit<ItemStorage, 'cantidad'> & {
   cantidad: number // la clave del objeto (ej. "11")
@@ -117,9 +100,11 @@ function resumenTotalBultos() {
 
     for (const item of items) {
       const cantidades = Object.values(item.cantidades ?? {})
-      for (const { paq, uni } of cantidades) {
-        totalPaq += paq
-        if (tipo === 'paq') totalUni += uni
+      for (const grupo of cantidades) {
+        for (const { paq, uni } of grupo) {
+          totalPaq += paq
+          if (tipo === 'paq') totalUni += uni
+        }
       }
     }
 
@@ -140,7 +125,6 @@ function resumenTotalBultos() {
   })
 
   resumen.value = resultArray
-  // console.log(resultArray)
 }
 
 function cargarVistaAgrupada() {
@@ -161,33 +145,42 @@ function cargarVistaAgrupada() {
   for (const [producto, detalles] of Object.entries(data)) {
     const { cantidades } = detalles
 
-    const keys = Object.keys(cantidades)
-  const sumandos = keys.map(Number)
-  const totalCantidad = sumandos.reduce((sum, val) => sum + val, 0)
+    const sumandos: number[] = []
+    let totalCantidad = 0
 
-    const { totalPaq, totalUni } = Object.values(cantidades).reduce(
-      (acc, { paq, uni }) => {
-        acc.totalPaq += paq
-        acc.totalUni += uni
-        return acc
-      },
-      { totalPaq: 0, totalUni: 0 },
-    )
+    for (const [key, arr] of Object.entries(cantidades)) {
+      const cantidad = +key
+      const veces = arr.length
+      sumandos.push(...Array(veces).fill(cantidad))
+      totalCantidad += cantidad * veces
+    }
+
+    const cantidadExpresion = `${sumandos.join(' + ')} = ${totalCantidad}`
+
+    const { totalPaq, totalUni } = Object.values(cantidades)
+      .flat()
+      .reduce(
+        (acc, { paq, uni }) => {
+          acc.totalPaq += paq
+          acc.totalUni += uni
+          return acc
+        },
+        { totalPaq: 0, totalUni: 0 },
+      )
 
     result.push({
       ...detalles,
       producto,
       cantidad: totalCantidad,
-      cantidadExpresion: `${sumandos.join(' + ')} = ${totalCantidad}`,
+      cantidadExpresion,
       paq: totalPaq,
       uni: totalUni,
       color: 'grupal',
     })
   }
 
-  items.value = result;
+  items.value = result
   resumenTotalBultos()
-  // console.log(result)
 }
 
 function cargarVistaGlobal() {
@@ -211,22 +204,23 @@ function cargarVistaGlobal() {
   for (const [producto, detalles] of Object.entries(data)) {
     const { cantidades } = detalles
 
-    for (const [cantidadStr, cantiDetalles] of Object.entries(cantidades)) {
-      result.push({
-        ...detalles,
-        producto,
-        cantidad: +cantidadStr,
-        ...cantiDetalles,
-      })
+    for (const [cantidadStr, detallesArray] of Object.entries(cantidades)) {
+      for (const cantiDetalles of detallesArray) {
+        result.push({
+          ...detalles,
+          producto,
+          cantidad: +cantidadStr,
+          ...cantiDetalles,
+        })
+      }
     }
   }
 
-  items.value = result;
+  items.value = result
 
   btnGlobal?.classList.add('green')
   resumenTotalBultos()
 }
-
 
 function handleEdit(item: ItemStorage) {
   const dialog = document.getElementById('formDialog') as HTMLDialogElement
@@ -270,7 +264,6 @@ function handleEdit(item: ItemStorage) {
 }
 
 function handleRemove(item: ItemStorage) {
-  console.log('eliminar', item)
 }
 
 function activarVistaResumen() {
