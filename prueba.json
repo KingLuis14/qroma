@@ -1,0 +1,236 @@
+{
+  "ESM PATO": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "92\n72\n56",
+      "marca": "ESM",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 92,
+          "color": "blanco",
+          "paq": 23,
+          "uni": 0
+        },
+        {
+          "cantidad": 72,
+          "color": "amarillo",
+          "paq": 18,
+          "uni": 0
+        },
+        {
+          "cantidad": 56,
+          "color": "rojo",
+          "paq": 14,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "FST SATINADO": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "FST",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 17,
+          "color": "estandar",
+          "paq": 4,
+          "uni": 1
+        }
+      ]
+    }
+  ],
+  "A COLORS SATINADO": [
+    {
+      "envase": "1GL",
+      "paquete": 2,
+      "cantidadTextArea": "4\n2",
+      "marca": "A COLORS",
+      "tipo": "paq x 2",
+      "cantidades": [
+        {
+          "cantidad": 4,
+          "color": "estandar",
+          "paq": 2,
+          "uni": 0
+        },
+        {
+          "cantidad": 2,
+          "color": "estandar",
+          "paq": 1,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "A COLORS MATE": [
+    {
+      "envase": "1GL",
+      "paquete": 2,
+      "cantidadTextArea": "6\n5\n12",
+      "marca": "A COLORS",
+      "tipo": "paq x 2",
+      "cantidades": [
+        {
+          "cantidad": 6,
+          "color": "estandar",
+          "paq": 3,
+          "uni": 0
+        },
+        {
+          "cantidad": 5,
+          "color": "estandar",
+          "paq": 2,
+          "uni": 1
+        },
+        {
+          "cantidad": 12,
+          "color": "estandar",
+          "paq": 6,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "FST MATE": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "FST",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 31,
+          "color": "estandar",
+          "paq": 7,
+          "uni": 3
+        }
+      ]
+    }
+  ],
+  "SATINADO": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "SATINADO",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 108,
+          "color": "estandar",
+          "paq": 27,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "PATO MATE": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "PATO",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 20,
+          "color": "estandar",
+          "paq": 5,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "DURALATEX": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "DURALATEX",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 12,
+          "color": "estandar",
+          "paq": 3,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "LACA PIROXILINA": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "LACA PIROXILINA",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 12,
+          "color": "estandar",
+          "paq": 3,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "TEROCHAP": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "TEROCHAP",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 8,
+          "color": "estandar",
+          "paq": 2,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "BASE PIROXILINA": [
+    {
+      "envase": "1GL",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "BASE PIROXILINA",
+      "tipo": "paq x 4",
+      "cantidades": [
+        {
+          "cantidad": 4,
+          "color": "estandar",
+          "paq": 1,
+          "uni": 0
+        }
+      ]
+    }
+  ],
+  "GLX TINTE": [
+    {
+      "envase": "caja",
+      "paquete": 4,
+      "cantidadTextArea": "",
+      "marca": "GLX",
+      "tipo": "caja x 4",
+      "cantidades": [
+        {
+          "cantidad": 84,
+          "color": "estandar",
+          "paq": 21,
+          "uni": 0
+        }
+      ]
+    }
+  ]
+}
