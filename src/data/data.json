@@ -3,26 +3,26 @@
     "nombre": "AC MATE",
     "marca": "AC",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo": "paq" },
-      { "envase": "1GL", "paquete": 2, "tipo": "paq" },
-      { "envase": "4GL", "paquete": 1, "tipo": "balde" }
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "AC SATINADO",
     "marca": "AC",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo": "paq" },
-      { "envase": "1GL", "paquete": 2, "tipo": "paq" },
-      { "envase": "4GL", "paquete": 1, "tipo": "balde" }
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "AC SEMI SATINADO",
     "marca": "AC",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo": "paq" },
-      { "envase": "1GL", "paquete": 2, "tipo": "paq" },
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
       { "envase": "4GL", "paquete": 1, "tipo": "balde" }
     ]
   },
@@ -30,301 +30,309 @@
     "nombre": "AC ULTRA LAVABLE SATINADO",
     "marca": "AC",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq" },
-      { "envase": "1GL", "paquete": 2 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP ANTICORROSIVO",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP BARRIO",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4, "tipo" : "paq" },
-      { "envase": "4GL", "paquete": 1, "tipo" : "balde" }
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP DURALATEX",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP IMPRIMANTE",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq" },
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde" }
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP IMPRIMANTE MUROS",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP OLEO MATE",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PATO",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4, "tipo" : "paq" },
-      { "envase": "4GL", "paquete": 1, "tipo" : "paq" }
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP PATO ANTICORROSIVO",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PATO BASE AL ACEITE",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PATO BASE ZINCROMATO",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PATO PLUS",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP PATO SINTETICO",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PINTOR",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP PASTA FINA",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 2 , "tipo" : "paq"},
-      { "envase": "3.5GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
+      { "envase": "3.5GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP SAT",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo" : "paq" },
-      { "envase": "1GL", "paquete": 4, "tipo" : "paq" },
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP SELLADOR",
     "marca": "CPP",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "CPP SUPER GLOSS",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "CPP TEMPLE PATO 25KG BOLSA",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "BOLSA", "paquete": 1 , "tipo" : "bolsa"}]
+    "presentaciones": [
+      { "envase": "BOLSA", "paquete": 1, "tipo": "bolsa temple 25kg" }
+    ]
   },
   {
     "nombre": "CPP TEMPLE PATO 25KG CAJA",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "CAJA", "paquete": 1 , "tipo" : "caja"}]
+    "presentaciones": [
+      { "envase": "CAJA", "paquete": 1, "tipo": "caja temple 25kg" }
+    ]
   },
   {
     "nombre": "CPP TEMPLE PATO 5 x 5KG CAJA",
     "marca": "CPP",
-    "presentaciones": [{ "envase": "CAJA", "paquete": 1 , "tipo" : "caja 5 x 5"}]
+    "presentaciones": [{ "envase": "CAJA", "paquete": 1, "tipo": "caja temple 5 x 5kg" }]
   },
   {
     "nombre": "FST ESMALTE SUPERIOR",
     "marca": "FST",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "FST MATE",
     "marca": "FST",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "FST SATINADO",
     "marca": "FST",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "PAR BARNIZ",
     "marca": "PAR",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "PAR BARNIZ MARINO",
     "marca": "PAR",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "PAR BASE PROXILINA",
     "marca": "PAR",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "PAR LACA SELLADORA CLASICA",
     "marca": "PAR",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo" : "paq" }]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "PAR REDUCTOR",
     "marca": "PAR",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
     ]
   },
   {
     "nombre": "PAR TINTE ALCOHOL",
     "marca": "PAR",
-    "presentaciones": [{ "envase": "CAJA", "paquete": 12, "tipo" : "caja x 12" }]
+    "presentaciones": [{ "envase": "CAJA", "paquete": 12, "tipo": "caja x 12 tintes" }]
   },
 
   {
     "nombre": "TKN BARNIZ DOBLE ACCION",
     "marca": "TKN",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "TKN BARNIZ MARINO",
     "marca": "TKN",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "TKN BARNIZ T-81",
     "marca": "TKN",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "paq"}]
+    "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
     "nombre": "TKN COLOR",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "TKN DD A5",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
     ]
   },
   {
     "nombre": "TKN DD B5",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
     ]
   },
   {
     "nombre": "TKN MOISTEK",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo" : "paq" },
-      { "envase": "1GL", "paquete": 4, "tipo" : "paq" },
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "TKN REDUCTOR",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "TKN TEKNOCOLA CAJA",
     "marca": "TKN",
-    "presentaciones": [{ "envase": "CAJA", "paquete": 20 , "tipo" : "caja teknocola"}]
+    "presentaciones": [
+      { "envase": "CAJA", "paquete": 20, "tipo": "caja teknocola" }
+    ]
   },
   {
     "nombre": "TKN TEKNOCOLA ULTRA",
     "marca": "TKN",
-    "presentaciones": [{ "envase": "1GL", "paquete": 4 , "tipo" : "caja teknocola"}]
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
+    ]
   },
   {
     "nombre": "TKN TEROCHAP",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"}
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" }
     ]
   },
   {
     "nombre": "VCD SATINADO",
     "marca": "VCD",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "VCD SUPERMAT",
     "marca": "VCD",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "VCD SUPERMAT 3AC",
     "marca": "VCD",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9, "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
     "nombre": "VCD VENCELATEX",
     "marca": "VCD",
     "presentaciones": [
-      { "envase": "1/4GL", "paquete": 9 , "tipo" : "paq"},
-      { "envase": "1GL", "paquete": 4 , "tipo" : "paq"},
-      { "envase": "4GL", "paquete": 1 , "tipo" : "balde"}
+      { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   }
 ]

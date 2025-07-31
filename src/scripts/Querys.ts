@@ -8,43 +8,52 @@ import type {
 
 const productos = productoData as ProductosPorNombre
 
+viewGlobal();
 const allList = viewProduct()
 // console.table(allList)
 
-const bultos = viewBultos(allList, 'Caja x 4')
-// console.table(bultos)
-const { agrupado, totalUnidades } = agruparPaqYSepararUnidades(allList)
+// viewBultos(allList)
 
-// console.log(agrupado);
+function viewGlobal() {
+  logTitle('Todos los productos')
+  const results: any[] = []
 
-for (const item of agrupado) {
-  console.log(`${item.totalPaq} ${item.tipo} (${item.totalPaq *  item.paquete})`)
+  for (const [producto, items] of Object.entries(productos)) {
+    for (const { paquete, tipo, cantidades } of items) {
+      for (const { cantidad, paq, uni, color } of cantidades) {
+        results.push({
+          producto,
+          paquete,
+          tipo,
+          paq,
+          uni,
+          cantidad,
+          bulto: `${paq} ${tipo}${uni > 0 ? ` + ${uni} uni` : ''}`,
+        })
+      }
+    }
+  }
+
+  console.table(results)
+  return results
 }
 
-console.log(`${totalUnidades} balde 1GL (${totalUnidades})`)
+function viewProduct(): ProductoResumen[] {
+  logTitle('Todos los productos')
+  const results: ProductoResumen[] = []
 
-sumaCantidades()
-
-function viewProduct() {
-  logTitle('Todos los productos ')
-  const results: Array<ProductoResumen> = []
-
-  for (const [producto, values] of Object.entries(productos)) {
-    for (const value of values) {
-      const { totalPaq, totalUni, totalCantidad } = sumarCantidades(
-        value.cantidades,
-      )
+  for (const [producto, items] of Object.entries(productos)) {
+    for (const { paquete, tipo, cantidades } of items) {
+      const { totalPaq, totalUni, totalCantidad } = sumarCantidades(cantidades)
 
       results.push({
         producto,
-        paquete: value.paquete,
-        tipo: value.tipo,
+        paquete,
+        tipo,
         totalPaq,
         totalUni,
-        bulto: `${totalPaq} ${value.tipo}${
-          totalUni > 0 ? ` + ${totalUni} uni` : ''
-        }`,
         cantidad: totalCantidad,
+        bulto: `${totalPaq} ${tipo}${totalUni > 0 ? ` + ${totalUni} uni` : ''}`,
       })
     }
   }
@@ -52,47 +61,35 @@ function viewProduct() {
   return results
 }
 
-function agruparPaqYSepararUnidades(array: ProductoResumen[]): {
-  agrupado: Array<{ tipo: string; totalPaq: number, paquete: number }>
-  totalUnidades: number
-} {
-  const agrupadoPorTipo: Record<
+function viewBultos(array: ProductoResumen[]) {
+  logTitle('Todos los productos')
+  const grouped = new Map<
     string,
-    { tipo: string; totalPaq: number, paquete: number }
-  > = {}
+    { tipo: string; totalPaq: number; paquete: number }
+  >()
   let totalUnidades = 0
 
-  for (const item of array) {
-    const existente = agrupadoPorTipo[item.tipo] || {
-      tipo: item.tipo,
-      totalPaq: 0,
-      
+  for (const { tipo, totalPaq, paquete, totalUni } of array) {
+    const existingGroup = grouped.get(tipo)
+
+    if (existingGroup) {
+      existingGroup.totalPaq += totalPaq
+    } else {
+      grouped.set(tipo, { tipo, totalPaq, paquete })
     }
 
-    agrupadoPorTipo[item.tipo] = {
-      tipo: item.tipo,
-      totalPaq: existente.totalPaq + item.totalPaq,
-      paquete: item.paquete
-    }
-
-    totalUnidades += item.totalUni
+    totalUnidades += totalUni
   }
 
-  const agrupado = Object.values(agrupadoPorTipo).map((data) => ({ ...data }));
+  // Imprimir Resultados
+  for (const { tipo, totalPaq, paquete } of grouped.values()) {
+    console.log(`${totalPaq} ${tipo} (${totalPaq * paquete})`)
+  }
 
+  console.log(`${totalUnidades} balde 1GL (${totalUnidades})`)
 
-  return { agrupado, totalUnidades }
+  sumaCantidades()
 }
-
-function viewBultos(
-  array: Array<ProductoResumen>,
-  paqueteBuscado: Producto['tipo'],
-) {
-  logTitle('Productos filtrados por ' + paqueteBuscado)
-  return array.filter((item) => item.tipo === paqueteBuscado.toLowerCase())
-}
-
-function resultViewBultos() {}
 
 function sumarCantidades(cantidades: Cantidad[]) {
   return cantidades.reduce(

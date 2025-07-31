@@ -1,228 +1,65 @@
 <template>
   <div>
-    <!-- Vista resumen -->
-    <ul v-if="modoVista === 'resumen'" class="title-2">
-      <li v-for="(grupo, i) in resumen" :key="i">
-        {{ grupo.bulto }}
-        <template v-if="grupo.totalUni > 0">
-          =
-          {{ grupo.totalPaq + grupo.totalUni }}
-        </template>
-      </li>
-      ----------------------------
-      <br />
-      {{
-        resumen.reduce((acc, item) => acc + item.totalPaq + item.totalUni, 0)
-      }}
-      Bultos
-    </ul>
-
-    <!-- Vista original -->
-    <div v-else>
-      <Item
-        v-for="(item, i) in items"
-        :key="i"
-        :item="item"
-        @increment="handleEdit(item)"
-      />
-      <div>
-        <h2>Total de Bultos</h2>
-        <br />
-        {{
-          resumen.reduce((acc, item) => acc + item.totalPaq + item.totalUni, 0)
-        }}
-        Bultos
-      </div>
-    </div>
+    <Item v-for="(item, index) in items" :key="index" :item="item" @edit="handleEdit" @delete="handleDelete" />
   </div>
+  <p>Total general de cantidades: {{ totalCantidades }}</p>
+  <p>Total de items : {{ totalItems }}</p>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import type { Producto } from '../interfaces/Item'
 import Item from './Item.vue'
-import type { ItemStorage } from '../interfaces/Item'
 
-type Item = Omit<ItemStorage, 'cantidad'> & {
-  cantidad: number // la clave del objeto (ej. "11")
-  color: string
-  paq: number
-  uni: number
-}
+const items = ref<Producto[]>([])
 
-const items = ref<Item[]>([])
-const resumen = ref<
-  {
-    paquete: string
-    items: ItemStorage[]
-    totalPaq: number
-    totalUni: number
-    bulto: string
-  }[]
->([])
-
-const modoVista = ref<'global' | 'agrupada' | 'resumen'>('global')
-
-function resumenTotalBultos() {
+const vistaTipo = () => {
   const guiaCodigo = localStorage.getItem('guiaActiva')
   if (!guiaCodigo) {
     items.value = []
     return
   }
 
-  const guiaLocalStorage = localStorage.getItem(guiaCodigo)
-  const data: ItemStorage[] = guiaLocalStorage
-    ? JSON.parse(guiaLocalStorage)
-    : {}
+  const datosGuardados = localStorage.getItem(guiaCodigo)
+  if (!datosGuardados) return
 
-  const agrupado = new Map<any, any[]>() // agrupado por paquete (string)
+  const data: Record<string, Producto> = JSON.parse(datosGuardados)
+  // console.log(Object.entries(data))
 
-  for (const [producto, detalles] of Object.entries(data)) {
-    const paquete = detalles.paquete // puede ser "1", "4", etc.
-
-    if (!agrupado.has(paquete)) {
-      agrupado.set(paquete, [])
-    }
-
-    agrupado.get(paquete)!.push({
-      ...detalles,
-      producto,
-    })
-  }
-
-  const result = Object.fromEntries(agrupado)
-
-  const resultArray = Object.entries(
-    result as Record<string, ItemStorage[]>,
-  ).map(([paquete, items]) => {
-    let totalPaq = 0
-    let totalUni = 0
-    const tipo = items[0]?.tipo // asumimos mismo tipo en el grupo
-
-    for (const item of items) {
-      const cantidades = Object.values(item.cantidades ?? {})
-      for (const grupo of cantidades) {
-        for (const { paq, uni } of grupo) {
-          totalPaq += paq
-          if (tipo === 'paq') totalUni += uni
-        }
-      }
-    }
-
-    const bultoText =
-      tipo === 'balde'
-        ? `${totalPaq} baldes`
-        : `${totalPaq} paq x ${paquete} ${
-            totalUni > 0 ? `+ ${totalUni} uni` : ''
-          }`
-
-    return {
-      paquete,
-      items,
-      totalPaq,
-      totalUni,
-      bulto: bultoText,
-    }
-  })
-
-  resumen.value = resultArray
+  items.value = [
+    ...Object.entries(data).map(([nombre, producto]) => ({
+      ...producto,
+      producto: nombre,
+    })),
+  ]
 }
 
-function cargarVistaAgrupada() {
-  modoVista.value = 'agrupada'
+onMounted(() => {
+  vistaTipo()
+
+  window.addEventListener('localStorageUpdate', vistaTipo)
+})
+
+function handleDelete(item: Producto) {
   const guiaCodigo = localStorage.getItem('guiaActiva')
-  if (!guiaCodigo) {
-    items.value = []
-    return
-  }
+  if (!guiaCodigo) return
 
   const guiaLocalStorage = localStorage.getItem(guiaCodigo)
-  const data: ItemStorage[] = guiaLocalStorage
-    ? JSON.parse(guiaLocalStorage)
-    : {}
+  if (!guiaLocalStorage) return
 
-  const result: Item[] = []
+  const data = JSON.parse(guiaLocalStorage)
 
-  for (const [producto, detalles] of Object.entries(data)) {
-    const { cantidades } = detalles
+  // Eliminar producto por nombre
+  delete data[item.producto]
 
-    const sumandos: number[] = []
-    let totalCantidad = 0
+  // Guardar actualizado
+  localStorage.setItem(guiaCodigo, JSON.stringify(data))
 
-    for (const [key, arr] of Object.entries(cantidades)) {
-      const cantidad = +key
-      const veces = arr.length
-      sumandos.push(...Array(veces).fill(cantidad))
-      totalCantidad += cantidad * veces
-    }
-
-    const cantidadExpresion = `${sumandos.join(' + ')} = ${totalCantidad}`
-
-    const { totalPaq, totalUni } = Object.values(cantidades)
-      .flat()
-      .reduce(
-        (acc, { paq, uni }) => {
-          acc.totalPaq += paq
-          acc.totalUni += uni
-          return acc
-        },
-        { totalPaq: 0, totalUni: 0 },
-      )
-
-    result.push({
-      ...detalles,
-      producto,
-      cantidad: totalCantidad,
-      cantidadExpresion,
-      paq: totalPaq,
-      uni: totalUni,
-      color: 'grupal',
-    })
-  }
-
-  items.value = result
-  resumenTotalBultos()
+  // Disparar evento para actualizar vista
+  window.dispatchEvent(new Event('localStorageUpdate'))
 }
 
-function cargarVistaGlobal() {
-  modoVista.value = 'global'
-  const btnGlobal = document.getElementById('btn-global')
-
-  const guiaCodigo = localStorage.getItem('guiaActiva')
-  if (!guiaCodigo) {
-    items.value = []
-    return
-  }
-
-  const guiaLocalStorage = localStorage.getItem(guiaCodigo)
-
-  const data: ItemStorage[] = guiaLocalStorage
-    ? JSON.parse(guiaLocalStorage)
-    : {}
-
-  const result: Item[] = []
-
-  for (const [producto, detalles] of Object.entries(data)) {
-    const { cantidades } = detalles
-
-    for (const [cantidadStr, detallesArray] of Object.entries(cantidades)) {
-      for (const cantiDetalles of detallesArray) {
-        result.push({
-          ...detalles,
-          producto,
-          cantidad: +cantidadStr,
-          ...cantiDetalles,
-        })
-      }
-    }
-  }
-
-  items.value = result
-
-  btnGlobal?.classList.add('green')
-  resumenTotalBultos()
-}
-
-function handleEdit(item: ItemStorage) {
+function handleEdit(item: Producto) {
   const dialog = document.getElementById('formDialog') as HTMLDialogElement
   dialog?.showModal()
 
@@ -237,17 +74,11 @@ function handleEdit(item: ItemStorage) {
 
   if (!productoData) return
 
-  const marcaButton = document.querySelector(
-    `button[data-marca="${item.marca}"]`,
-  ) as HTMLButtonElement
+  const marcaButton = document.querySelector(`button[data-marca="${item.marca}"]`) as HTMLButtonElement
   marcaButton?.click()
 
-  const productoSelect = document.getElementById(
-    'productoSelect',
-  ) as HTMLInputElement
-  const envaseSelect = document.getElementById(
-    'envaseSelect',
-  ) as HTMLInputElement
+  const productoSelect = document.getElementById('productoSelect') as HTMLInputElement
+  const envaseSelect = document.getElementById('envaseSelect') as HTMLInputElement
   const datosTextarea = document.getElementById('datos') as HTMLTextAreaElement
 
   if (productoSelect && envaseSelect) {
@@ -257,32 +88,20 @@ function handleEdit(item: ItemStorage) {
     envaseSelect.value = productoData.envase
     envaseSelect.dispatchEvent(new Event('input', { bubbles: true }))
 
-    document.querySelector<HTMLInputElement>('#paquete')!.value =
-      productoData.paquete || ''
+    document.querySelector<HTMLInputElement>('#paquete')!.value = productoData.paquete || ''
     datosTextarea.value = productoData.cantidadTextArea
   }
 }
 
-function handleRemove(item: ItemStorage) {
+const sumarTotalCantidades = () => {
+  return items.value.reduce((total, item) => {
+    return total + item.cantidades.reduce((suma, c) => suma + c.cantidad, 0)
+  }, 0)
 }
 
-function activarVistaResumen() {
-  modoVista.value = 'resumen'
-}
+const totalCantidades = computed(() =>
+  items.value.reduce((total, item) => total + item.cantidades.reduce((suma, c) => suma + c.cantidad, 0), 0),
+)
 
-onMounted(() => {
-  resumenTotalBultos()
-  cargarVistaGlobal()
-  window.addEventListener('localStorageUpdate', cargarVistaGlobal)
-  window.addEventListener('vista:tipo', cargarVistaAgrupada)
-  window.addEventListener('vista:bulto', activarVistaResumen)
-})
-
-onBeforeUnmount(() => {
-  resumenTotalBultos()
-  cargarVistaGlobal()
-  window.removeEventListener('localStorageUpdate', cargarVistaGlobal)
-  window.removeEventListener('vista:tipo', cargarVistaAgrupada)
-  window.removeEventListener('vista:bulto', activarVistaResumen)
-})
+const totalItems = computed(() => items.value.reduce((total, item) => total + item.cantidades.length, 0))
 </script>

@@ -43,6 +43,21 @@
           "uni": 1
         }
       ]
+    },
+    {
+      "envase": "4GL",
+      "paquete": 1,
+      "cantidadTextArea": "",
+      "marca": "FST",
+      "tipo": "Balde 4GL",
+      "cantidades": [
+        {
+          "cantidad": 10,
+          "color": "estandar",
+          "paq": 10,
+          "uni": 0
+        }
+      ]
     }
   ],
   "A COLORS SATINADO": [

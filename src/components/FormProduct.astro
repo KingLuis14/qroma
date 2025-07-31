@@ -101,7 +101,7 @@
   }
   form {
     display: grid;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: auto 1fr auto 1fr;
     gap: 1rem 0.75rem;
     align-items: center;
   }
@@ -149,245 +149,30 @@
         height: 100%;
         object-fit: contain;
         filter: grayscale(1);
+        opacity: .4;
       }
 
       &[active] {
         > img {
           filter: grayscale(0);
           outline: 1.2px solid #3bc836;
+          opacity: 1;
         }
       }
     }
   }
 </style>
 
-<script>
-  import productos from '../data/data.json'
+<script >
 
-  // Helpers
-  const $ = (selector: string) => document.getElementById(selector)
+import { FormManager } from "@/scripts/FormControl";
 
-  function getProductosByMarca(marca: string) {
-    return productos.filter((p) => p.marca === marca).map((p) => p.nombre)
-  }
+ 
 
-  function getPresentacionesByProducto(nombre: string) {
-    return productos.find((p) => p.nombre === nombre)?.presentaciones ?? []
-  }
+document.addEventListener('astro:page-load', () => {
+  FormManager.init();
+  
+});
 
-  function getTipoProduct(nombre: string, envase: string) {
-    return getPresentacionesByProducto(nombre).find(
-      (pro) => pro.envase === envase,
-    )?.tipo
-  }
 
-  function createSelectOptions(
-    select: HTMLSelectElement,
-    options: string[],
-    placeholder: string,
-  ) {
-    select.innerHTML = `<option value="">-- ${placeholder} --</option>`
-    const fragment = document.createDocumentFragment()
-
-    for (const value of options) {
-      const option = document.createElement('option')
-      option.value = option.textContent = value
-      fragment.appendChild(option)
-    }
-
-    select.appendChild(fragment)
-  }
-
-  function createSelectProduct(marca: string) {
-    const nombres = getProductosByMarca(marca)
-    const select = $('productoSelect') as HTMLSelectElement
-    if (select) createSelectOptions(select, nombres, 'Selecciona un Producto')
-  }
-
-  function createSelectEnvase(producto: string) {
-    const envases = getPresentacionesByProducto(producto).map((p) => p.envase)
-    const select = $('envaseSelect') as HTMLSelectElement
-    if (select) createSelectOptions(select, envases, 'Env')
-  }
-
-  document.addEventListener('astro:page-load', () => {
-    const productoSelect = $('productoSelect') as HTMLSelectElement
-    const envaseSelect = $('envaseSelect') as HTMLSelectElement
-    const paqueteInput = $('paquete') as HTMLInputElement
-    const resultadoInput = $('resultado') as HTMLInputElement
-    const guiaInput = $('guia') as HTMLInputElement
-    const datosInput = document.getElementById('datos') as HTMLInputElement
-
-    function calcularTotalEnTiempoReal(paquete: number) {
-      const texto = datosInput.value.trim()
-      const lineas = texto.split('\n')
-
-      let total = 0
-      const sumandos: number[] = []
-
-      for (const linea of lineas) {
-        if (!linea.trim()) continue
-
-        const partes = linea.split(',').map((p) => p.trim())
-        const cantidadStr = partes[0]
-        const cantidad = parseInt(cantidadStr, 10)
-
-        if (!isNaN(cantidad)) {
-          total += cantidad
-          sumandos.push(cantidad)
-        }
-      }
-
-      if (resultadoInput) {
-        resultadoInput.textContent = `Total Bultos : ${sumandos.join(' + ')} = ${total}`
-      }
-    }
-
-    function procesarTextArea(paquete: number) {
-      const texto = datosInput.value.trim()
-      const lineas = texto.split('\n')
-
-      const mapa = new Map<
-        number,
-        { color: string; paq: number; uni: number }[]
-      >()
-
-      for (const linea of lineas) {
-        if (!linea.trim()) continue
-
-        const partes = linea.split(',').map((p) => p.trim())
-        const cantidadStr = partes[0]
-        const color = partes[1] || 'estandar' // color por defecto
-
-        const cantidad = parseInt(cantidadStr, 10)
-
-        if (!isNaN(cantidad)) {
-          const paq = Math.floor(cantidad / paquete)
-          const uni = cantidad % paquete
-
-          const item = { color, paq, uni }
-
-          // Si ya existe la llave, agregamos al array; si no, lo creamos
-          if (mapa.has(cantidad)) {
-            mapa.get(cantidad)!.push(item)
-          } else {
-            mapa.set(cantidad, [item])
-          }
-        }
-      }
-
-      return mapa
-    }
-
-    document.querySelector('.button-panel')?.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement
-      const button = target.closest('button[data-marca]') as HTMLElement
-      if (!button) return
-
-      document
-        .querySelectorAll('button[data-marca]')
-        .forEach((btn) => btn.removeAttribute('active'))
-
-      button.setAttribute('active', '')
-      const marca = button.dataset.marca!
-      createSelectProduct(marca)
-
-      // Reset envase y paquete
-      if (envaseSelect)
-        envaseSelect.innerHTML = `<option value="">-- Env --</option>`
-      if (paqueteInput) paqueteInput.value = ''
-    })
-
-    productoSelect?.addEventListener('input', () => {
-      createSelectEnvase(productoSelect.value)
-      if (paqueteInput) paqueteInput.value = '' // Limpia también el paquete
-    })
-
-    envaseSelect?.addEventListener('input', () => {
-      const presentacion = getPresentacionesByProducto(
-        productoSelect.value,
-      ).find((p) => p.envase === envaseSelect.value)
-      if (presentacion && paqueteInput) {
-        paqueteInput.value = String(presentacion.paquete)
-      }
-    })
-
-    datosInput?.addEventListener('input', () => {
-      calcularTotalEnTiempoReal(+paqueteInput?.value)
-    })
-
-    document.getElementById('calcularBtn')?.addEventListener('click', () => {
-      const producto = productoSelect?.value
-      if (!producto) return
-
-      // Mapa cantidad-color
-      const cantidadMap = procesarTextArea(Number(paqueteInput?.value)) // 👈 devuelve un Map
-
-      // Convertir a objeto plano para guardar
-      const cantidadObj = Object.fromEntries(cantidadMap.entries())
-
-      // Crear la estructura del producto
-      const datosFormulario = {
-        envase: envaseSelect?.value,
-        paquete: +paqueteInput?.value,
-        img: document.querySelector<HTMLElement>(`button[data-marca][active]`)?.querySelector('img')?.src,
-        cantidadTextArea: datosInput.value.trim(),
-        marca: document.querySelector<HTMLElement>(`button[data-marca][active]`)
-          ?.dataset.marca!,
-        tipo: getTipoProduct(producto, envaseSelect?.value),
-        cantidades: cantidadObj,
-      }
-
-      // Recuperar datos existentes del localStorage
-      const datosGuardados = localStorage.getItem(guiaInput.value)
-      const mapa = datosGuardados
-        ? new Map(Object.entries(JSON.parse(datosGuardados)))
-        : new Map()
-
-      // Actualizar o insertar el producto en el mapa
-
-      mapa.set(producto, datosFormulario)
-
-      localStorage.setItem(
-        guiaInput.value,
-        JSON.stringify(Object.fromEntries(mapa)),
-      )
-      window.dispatchEvent(new Event('localStorageUpdate'))
-    })
-
-    function resetearFormulario() {
-      const dialog = document.getElementById(
-        'formDialog',
-      ) as HTMLDialogElement | null
-      const form = dialog?.querySelector('form') as HTMLFormElement | null
-
-      if (!dialog || !form) return
-
-      form.reset()
-
-      // Elementos individuales con tipado
-      const productoSelect = document.getElementById(
-        'productoSelect',
-      ) as HTMLSelectElement
-      const envaseSelect = document.getElementById(
-        'envaseSelect',
-      ) as HTMLSelectElement
-      const paqueteInput = document.getElementById(
-        'paquete',
-      ) as HTMLInputElement
-      const datosTextarea = document.getElementById(
-        'datos',
-      ) as HTMLTextAreaElement
-      const resultadoLabel = document.getElementById(
-        'resultado',
-      ) as HTMLLabelElement
-
-      // Reseteo explícito
-      productoSelect.value = ''
-      envaseSelect.value = ''
-      paqueteInput.value = ''
-      datosTextarea.value = ''
-      resultadoLabel.textContent = 'Total Bultos'
-    }
-  })
 </script>
