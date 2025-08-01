@@ -103,9 +103,7 @@ export class FormManager {
       const button = target.closest('button[data-marca]') as HTMLElement
       if (!button) return
 
-      document
-        .querySelectorAll('button[data-marca]')
-        .forEach((btn) => btn.removeAttribute('active'))
+      document.querySelectorAll('button[data-marca]').forEach((btn) => btn.removeAttribute('active'))
       button.setAttribute('active', '')
 
       const marca = button.dataset.marca!
@@ -138,8 +136,8 @@ export class FormManager {
       const form = document.querySelector('#formDialog form') as HTMLFormElement
       if (!form.checkValidity()) {
         form.reportValidity()
-        console.log('erro');
-        
+        console.log('erro')
+
         return
       }
       const producto = productoSelect.value
@@ -159,14 +157,34 @@ export class FormManager {
         cantidades,
       }
 
-      const guia = guiaInput.value
-      const datosGuardados = localStorage.getItem(guia)
-      const mapa = datosGuardados ? new Map(Object.entries(JSON.parse(datosGuardados))) : new Map()
-      mapa.set(producto, datosFormulario)
+      const codigoGuia = guiaInput.value
+      const datosEnLocalStorage = localStorage.getItem(codigoGuia)
 
-      localStorage.setItem(guia, JSON.stringify(Object.fromEntries(mapa)))
+      const mapaProductosPorNombre = datosEnLocalStorage
+        ? new Map(Object.entries(JSON.parse(datosEnLocalStorage)))
+        : new Map()
+
+      const listaProductosExistentes: Producto[] = mapaProductosPorNombre.get(producto) || []
+
+      const yaExisteProductoConMismoTipo = listaProductosExistentes.some(
+        (productoExistente) => productoExistente.tipo === datosFormulario.tipo,
+      )
+
+      const listaActualizada = yaExisteProductoConMismoTipo
+        ? listaProductosExistentes.map(
+            (productoExistente) =>
+              productoExistente.tipo === datosFormulario.tipo
+                ? datosFormulario 
+                : productoExistente,
+          )
+        : [...listaProductosExistentes, datosFormulario] // Agrega si no existe
+
+      mapaProductosPorNombre.set(producto, listaActualizada)
+
+      localStorage.setItem(codigoGuia, JSON.stringify(Object.fromEntries(mapaProductosPorNombre)))
+
       window.dispatchEvent(new Event('localStorageUpdate'))
-        this.resetFormulario();
+      this.resetFormulario()
     })
   }
 
@@ -190,7 +208,6 @@ export class FormManager {
     document.querySelectorAll('button[data-marca]').forEach((btn) => {
       btn.removeAttribute('active')
     })
-
     ;(document.getElementById('formDialog') as HTMLDialogElement)?.close()
   }
 }

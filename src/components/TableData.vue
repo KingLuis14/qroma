@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Item v-for="(item, index) in items" :key="index" :item="item" @edit="handleEdit" @delete="handleDelete" />
+    <Item v-for="item in items" :key="item.producto" :item="item" @edit="handleEdit" @delete="handleDelete" />
   </div>
   <p>Total general de cantidades: {{ totalCantidades }}</p>
   <p>Total de items : {{ totalItems }}</p>
@@ -23,15 +23,16 @@ const vistaTipo = () => {
   const datosGuardados = localStorage.getItem(guiaCodigo)
   if (!datosGuardados) return
 
-  const data: Record<string, Producto> = JSON.parse(datosGuardados)
-  // console.log(Object.entries(data))
+  const data: Record<string, Producto[]> = JSON.parse(datosGuardados)
 
-  items.value = [
-    ...Object.entries(data).map(([nombre, producto]) => ({
+  items.value = Object.entries(data).flatMap(([nombre, productos]) =>
+    productos.map((producto) => ({
       ...producto,
-      producto: nombre,
+      producto: nombre, // asegúrate de mantener la propiedad `producto` explícitamente
     })),
-  ]
+  )
+
+  // console.log(data)
 }
 
 onMounted(() => {
@@ -48,16 +49,27 @@ function handleDelete(item: Producto) {
   if (!guiaLocalStorage) return
 
   const data = JSON.parse(guiaLocalStorage)
+  const productosDelNombre: Producto[] = data[item.producto]
 
-  // Eliminar producto por nombre
-  delete data[item.producto]
+  if (!productosDelNombre) return
 
-  // Guardar actualizado
+  // Filtrar los productos que NO tienen el mismo tipo
+  const productosFiltrados = productosDelNombre.filter(
+    (producto: Producto) => producto.tipo !== item.tipo
+  )
+
+  if (productosFiltrados.length > 0) {
+    // Aún quedan productos con el mismo nombre, actualizamos la lista
+    data[item.producto] = productosFiltrados
+  } else {
+    // Ya no queda ninguno, eliminamos la clave por completo
+    delete data[item.producto]
+  }
+
   localStorage.setItem(guiaCodigo, JSON.stringify(data))
-
-  // Disparar evento para actualizar vista
   window.dispatchEvent(new Event('localStorageUpdate'))
 }
+
 
 function handleEdit(item: Producto) {
   const dialog = document.getElementById('formDialog') as HTMLDialogElement
@@ -70,9 +82,13 @@ function handleEdit(item: Producto) {
   if (!guiaLocalStorage) return
 
   const data = JSON.parse(guiaLocalStorage)
-  const productoData = data[item.producto] // ← busca por nombre del producto
+  const productosData: Producto[] = data[item.producto] // ← busca por nombre del producto
 
-  if (!productoData) return
+  if (!productosData) return
+
+  const product = productosData.find((prod) => prod.tipo === item.tipo)
+
+  if (!product) return
 
   const marcaButton = document.querySelector(`button[data-marca="${item.marca}"]`) as HTMLButtonElement
   marcaButton?.click()
@@ -85,18 +101,12 @@ function handleEdit(item: Producto) {
     productoSelect.value = item.producto
     productoSelect.dispatchEvent(new Event('input', { bubbles: true }))
 
-    envaseSelect.value = productoData.envase
+    envaseSelect.value = product.envase
     envaseSelect.dispatchEvent(new Event('input', { bubbles: true }))
 
-    document.querySelector<HTMLInputElement>('#paquete')!.value = productoData.paquete || ''
-    datosTextarea.value = productoData.cantidadTextArea
+    document.querySelector<HTMLInputElement>('#paquete')!.value = String(product.paquete || '')
+    datosTextarea.value = product.cantidadTextArea
   }
-}
-
-const sumarTotalCantidades = () => {
-  return items.value.reduce((total, item) => {
-    return total + item.cantidades.reduce((suma, c) => suma + c.cantidad, 0)
-  }, 0)
 }
 
 const totalCantidades = computed(() =>
