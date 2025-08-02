@@ -41,7 +41,7 @@ import MainLayout from '../layout/MainLayout.astro'
             >
           </li> -->
           <li>
-            <button type="button" class="button disable" id="btn-tipo">
+            <button type="button" class="button disable green" id="btn-tipo">
               Tipo
             </button>
           </li>
@@ -90,6 +90,7 @@ import MainLayout from '../layout/MainLayout.astro'
 
       // Lanzar el evento correspondiente
       const evento = eventosVista[target.id]
+      
       window.dispatchEvent(new CustomEvent(evento))
     })
 

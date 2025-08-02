@@ -1,10 +1,30 @@
 <template>
   <div>
-    <Item v-for="item in items" :key="item.producto" :item="item" @edit="handleEdit" @delete="handleDelete" />
+    <template v-if="modo === 'tipo'">
+      <Item
+        v-for="item in items"
+        :key="item.producto + '-' + item.tipo"
+        :item="item"
+        @edit="handleEdit"
+        @delete="handleDelete"
+      />
+    </template>
+
+    <template v-else>
+       <ul>
+        <li  class="title-2" v-for="(texto, i) in bultosTextuales" :key="i">{{ texto }}</li>
+      </ul>
+    </template>
   </div>
-  <p>Total general de cantidades: {{ totalCantidades }}</p>
-  <p>Total de items : {{ totalItems }}</p>
+
+  <br>
+  <br>
+  <hr>
+   <br>
+  <p class="title">Total general de cantidades: {{ totalCantidades }}</p>
+  <p class="title">Total de items : {{ totalItems }}</p>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
@@ -12,6 +32,9 @@ import type { Producto } from '../interfaces/Item'
 import Item from './Item.vue'
 
 const items = ref<Producto[]>([])
+const modo = ref<'tipo' | 'bulto'>('tipo') // ← por defecto es tipo
+const bultosTextuales = ref<string[]>([])
+
 
 const vistaTipo = () => {
   const guiaCodigo = localStorage.getItem('guiaActiva')
@@ -32,13 +55,63 @@ const vistaTipo = () => {
     })),
   )
 
+  modo.value = 'tipo'
   // console.log(data)
 }
+
+
+function viewBultos() {
+  const guiaCodigo = localStorage.getItem('guiaActiva');
+  if (!guiaCodigo) return;
+
+  const dataRaw = localStorage.getItem(guiaCodigo);
+  if (!dataRaw) return;
+
+  const data: Record<string, Producto[]> = JSON.parse(dataRaw);
+  const grouped = new Map<string, { tipo: string; totalPaq: number; paquete: number }>();
+  let totalUnidades = 0;
+
+  for (const productos of Object.values(data)) {
+    for (const { tipo, paquete, cantidades } of productos) {
+      const paq = cantidades.reduce((sum, c) => sum + c.paq, 0);
+      const uni = cantidades.reduce((sum, c) => sum + c.uni, 0);
+
+      const group = grouped.get(tipo);
+      if (group) {
+        group.totalPaq += paq;
+      } else {
+        grouped.set(tipo, { tipo, totalPaq: paq, paquete });
+      }
+
+      totalUnidades += uni;
+    }
+  }
+
+  const textoFinal: string[] = []
+
+  for (const { tipo, totalPaq, paquete } of grouped.values()) {
+    if (totalPaq > 0) {
+      textoFinal.push(`${totalPaq} ${tipo} (${totalPaq * paquete})`)
+    }
+  }
+
+  if (totalUnidades > 0) {
+    textoFinal.push(`${totalUnidades} balde 1GL (${totalUnidades})`)
+  }
+
+  bultosTextuales.value = textoFinal
+  modo.value = 'bulto'
+}
+
+
+
 
 onMounted(() => {
   vistaTipo()
 
   window.addEventListener('localStorageUpdate', vistaTipo)
+  window.addEventListener('vista:bulto', viewBultos);
+  window.addEventListener('vista:tipo', vistaTipo);
 })
 
 function handleDelete(item: Producto) {

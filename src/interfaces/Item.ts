@@ -52,4 +52,4 @@ export type ProductoResumen = {
   cantidad: number
 }
 
-export type TipoProducto = 'paq x 9' | 'paq x 4' | 'paq x 2' | 'Balde 4GL' | 'Caja x 4'
+export type TipoProducto = 'paq x 9' | 'paq x 4' | 'paq x 2' | 'Balde 4GL' | 'Caja x 4' | 'balde 1GL' 

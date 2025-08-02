@@ -14,7 +14,7 @@
 
     <div class="item__content">
       <ul class="item__list">
-        <li>{{ item.producto }} {{ item.envase }}</li>
+        <li style="font-weight: 600;">{{ item.producto }} {{ item.envase }}</li>
         <li>Cantidad: {{ resumenCantidades.expresion }}</li>
         <li class="bulto">
           Bulto:
@@ -82,7 +82,7 @@ const toggleActivo = () => {
 <style scoped>
 .item {
   display: grid;
-  grid-template-columns: 1rem 28% 1fr;
+  grid-template-columns: 1rem 25% 1fr;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding: 1rem 0.5rem;
@@ -95,11 +95,10 @@ const toggleActivo = () => {
       filter: grayscale(1);
     }
 
-    .bulto {
+    .bulto, .item__btnEditar, .item__btnEliminar  {
       background-color: rgb(96, 96, 96, 0.17);
       border: 1px solid #606060;
-      width: fit-content;
-      padding: 0.2em 0.5em;
+
     }
   }
 }
