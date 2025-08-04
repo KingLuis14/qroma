@@ -11,20 +11,19 @@
     </template>
 
     <template v-else>
-       <ul>
-        <li  class="title-2" v-for="(texto, i) in bultosTextuales" :key="i">{{ texto }}</li>
+      <ul>
+        <li class="title-2" v-for="(texto, i) in bultosTextuales" :key="i">{{ texto }}</li>
       </ul>
     </template>
   </div>
 
-  <br>
-  <br>
-  <hr>
-   <br>
+  <br />
+  <br />
+  <hr />
+  <br />
   <p class="title">Total general de cantidades: {{ totalCantidades }}</p>
   <p class="title">Total de items : {{ totalItems }}</p>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
@@ -34,7 +33,6 @@ import Item from './Item.vue'
 const items = ref<Producto[]>([])
 const modo = ref<'tipo' | 'bulto'>('tipo') // ← por defecto es tipo
 const bultosTextuales = ref<string[]>([])
-
 
 const vistaTipo = () => {
   const guiaCodigo = localStorage.getItem('guiaActiva')
@@ -59,31 +57,30 @@ const vistaTipo = () => {
   // console.log(data)
 }
 
-
 function viewBultos() {
-  const guiaCodigo = localStorage.getItem('guiaActiva');
-  if (!guiaCodigo) return;
+  const guiaCodigo = localStorage.getItem('guiaActiva')
+  if (!guiaCodigo) return
 
-  const dataRaw = localStorage.getItem(guiaCodigo);
-  if (!dataRaw) return;
+  const dataRaw = localStorage.getItem(guiaCodigo)
+  if (!dataRaw) return
 
-  const data: Record<string, Producto[]> = JSON.parse(dataRaw);
-  const grouped = new Map<string, { tipo: string; totalPaq: number; paquete: number }>();
-  let totalUnidades = 0;
+  const data: Record<string, Producto[]> = JSON.parse(dataRaw)
+  const grouped = new Map<string, { tipo: string; totalPaq: number; paquete: number }>()
+  let totalUnidades = 0
 
   for (const productos of Object.values(data)) {
     for (const { tipo, paquete, cantidades } of productos) {
-      const paq = cantidades.reduce((sum, c) => sum + c.paq, 0);
-      const uni = cantidades.reduce((sum, c) => sum + c.uni, 0);
+      const paq = cantidades.reduce((sum, c) => sum + c.paq, 0)
+      const uni = cantidades.reduce((sum, c) => sum + c.uni, 0)
 
-      const group = grouped.get(tipo);
+      const group = grouped.get(tipo)
       if (group) {
-        group.totalPaq += paq;
+        group.totalPaq += paq
       } else {
-        grouped.set(tipo, { tipo, totalPaq: paq, paquete });
+        grouped.set(tipo, { tipo, totalPaq: paq, paquete })
       }
 
-      totalUnidades += uni;
+      totalUnidades += uni
     }
   }
 
@@ -103,15 +100,12 @@ function viewBultos() {
   modo.value = 'bulto'
 }
 
-
-
-
 onMounted(() => {
   vistaTipo()
 
   window.addEventListener('localStorageUpdate', vistaTipo)
-  window.addEventListener('vista:bulto', viewBultos);
-  window.addEventListener('vista:tipo', vistaTipo);
+  window.addEventListener('vista:bulto', viewBultos)
+  window.addEventListener('vista:tipo', vistaTipo)
 })
 
 function handleDelete(item: Producto) {
@@ -127,9 +121,7 @@ function handleDelete(item: Producto) {
   if (!productosDelNombre) return
 
   // Filtrar los productos que NO tienen el mismo tipo
-  const productosFiltrados = productosDelNombre.filter(
-    (producto: Producto) => producto.tipo !== item.tipo
-  )
+  const productosFiltrados = productosDelNombre.filter((producto: Producto) => producto.tipo !== item.tipo)
 
   if (productosFiltrados.length > 0) {
     // Aún quedan productos con el mismo nombre, actualizamos la lista
@@ -142,7 +134,6 @@ function handleDelete(item: Producto) {
   localStorage.setItem(guiaCodigo, JSON.stringify(data))
   window.dispatchEvent(new Event('localStorageUpdate'))
 }
-
 
 function handleEdit(item: Producto) {
   const dialog = document.getElementById('formDialog') as HTMLDialogElement

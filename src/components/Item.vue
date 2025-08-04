@@ -1,35 +1,30 @@
 <template>
-  <div class="item" :class="{ activo: activo }">
+  <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; margin-bottom: 1rem">
     <input type="checkbox" @change="toggleActivo" :checked="activo" />
+    <div class="item" :class="[isColor(item.tipo) || 'gray', { activo: activo }]">
+      <div class="item__content">
+        <ul class="item__list">
+          <li style="font-weight: 600">{{ item.producto }} {{ item.envase }}</li>
+          <li>Cantidad: {{ resumenCantidades.expresion }}</li>
+          <li class="bulto">
+            Bulto:
+            {{
+              resumenCantidades.totalPaq > 0
+                ? resumenCantidades.totalPaq +
+                  ' ' +
+                  item.tipo +
+                  (resumenCantidades.totalUni > 0 ? ' + ' + resumenCantidades.totalUni + ' uni' : '')
+                : resumenCantidades.totalUni > 0
+                ? resumenCantidades.totalUni + ' uni'
+                : ''
+            }}
+          </li>
+        </ul>
 
-    <div class="item__imgWrapper" :data-type="item.tipo">
-      <img
-        :src="
-          item.img || 'https://upload.wikimedia.org/wikipedia/commons/0/0a/No-image-available.png'
-        "
-        alt=""
-        class="item__img"
-      />
-    </div>
-
-    <div class="item__content">
-      <ul class="item__list">
-        <li style="font-weight: 600;">{{ item.producto }} {{ item.envase }}</li>
-        <li>Cantidad: {{ resumenCantidades.expresion }}</li>
-        <li class="bulto">
-          Bulto:
-          {{
-            resumenCantidades.totalPaq +
-            ' ' +
-            item.tipo +
-            (resumenCantidades.totalUni > 0 ? ' + ' + resumenCantidades.totalUni + ' uni' : '')
-          }}
-        </li>
-      </ul>
-
-      <div class="item__controls">
-        <button class="button item__btnEditar" @click="$emit('edit', item)">+</button>
-        <button class="button item__btnEliminar" @click="$emit('delete', item)" >x</button>
+        <div class="item__controls">
+          <button class="button item__btnEditar" @click="$emit('edit', item)">+</button>
+          <button class="button item__btnEliminar" @click="$emit('delete', item)">x</button>
+        </div>
       </div>
     </div>
   </div>
@@ -59,46 +54,59 @@ const procesarCantidades = (cantidades: Cantidad[]) => {
       acc.expresion.push(cantidad)
       return acc
     },
-    { totalPaq: 0, totalUni: 0, totalCantidad: 0, expresion: [] as number[] }
+    { totalPaq: 0, totalUni: 0, totalCantidad: 0, expresion: [] as number[] },
   )
 
   return {
     ...resumen,
-    expresion: `${resumen.expresion.join(' + ')} = ${resumen.totalCantidad}`
+    expresion: `${resumen.expresion.join(' + ')} = ${resumen.totalCantidad}`,
   }
 }
 
 // 🔁 Recalcular cuando cambian los props reactivos
-const resumenCantidades = computed(() =>
-  procesarCantidades(props.item.cantidades)
-)
+const resumenCantidades = computed(() => procesarCantidades(props.item.cantidades))
 
 const toggleActivo = () => {
   activo.value = !activo.value
 }
-</script>
 
+const isColor = (tipo: Producto['tipo']) => {
+  const colores: Record<Producto['tipo'], string> = {
+    'paq x 4': 'green',
+    'paq x 2': 'yellow',
+    'paq x 9': 'orange',
+    'balde 4GL': 'fucsia',
+    'balde 1GL': 'gray',
+    'caja x 4': 'gray',
+  }
+
+  return colores[tipo]
+}
+</script>
 
 <style scoped>
 .item {
   display: grid;
-  grid-template-columns: 1rem 25% 1fr;
+  grid-template-columns: 1fr;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem 0.5rem;
-  border-radius: 0.5rem;
+  /* margin-bottom: 1.5rem; */
+  padding: 1.25rem 1rem;
+  border-radius: 4px 8px 8px 4px;
+  border-left: 5px solid var(--color-active, transparent);
+  background-color: #0f1011;
 
   &.activo {
-    background-color: #0f1011;
+    --color-active: rgb(108, 108, 108);
+    background-color: #272727;
 
     .item__imgWrapper img {
       filter: grayscale(1);
     }
 
-    .bulto, .item__btnEditar, .item__btnEliminar  {
-      background-color: rgb(96, 96, 96, 0.17);
-      border: 1px solid #606060;
-
+    .item__btnEditar,
+    .item__btnEliminar {
+      background-color: #272727;
+      border: 1px solid var(--color-active);
     }
   }
 }
@@ -140,10 +148,11 @@ const toggleActivo = () => {
 }
 
 .bulto {
-  background-color: rgba(59, 200, 54, 0.17);
-  border: 1px solid #3bc836;
+  position: relative;
+  background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
+  border: 1px solid var(--color-active);
   width: fit-content;
-  padding: 0.2em 0.5em;
+  padding: 0.25em 0.75em;
 }
 
 .item__imgWrapper {
@@ -151,7 +160,7 @@ const toggleActivo = () => {
   overflow: hidden;
   aspect-ratio: 16/9;
 
-  > img{
+  > img {
     height: 100%;
     /* object-fit: contain; */
   }

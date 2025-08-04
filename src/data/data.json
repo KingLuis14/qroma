@@ -75,7 +75,7 @@
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
-    "nombre": "CPP PATO",
+    "nombre": "CPP PATO MATE",
     "marca": "CPP",
     "presentaciones": [
       { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" },
@@ -106,12 +106,12 @@
     ]
   },
   {
-    "nombre": "CPP PATO SINTETICO",
+    "nombre": "CPP ESM PATO",
     "marca": "CPP",
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
-    "nombre": "CPP PINTOR",
+    "nombre": "CPP ESM PINTOR",
     "marca": "CPP",
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
@@ -146,11 +146,19 @@
     "marca": "CPP",
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
+  
   {
     "nombre": "CPP TEMPLE PATO 25KG BOLSA",
     "marca": "CPP",
     "presentaciones": [
       { "envase": "BOLSA", "paquete": 1, "tipo": "bolsa temple 25kg" }
+    ]
+  },
+  {
+    "nombre": "CPP TEMPLE PATO 5 x 5kg BOLSA",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "BOLSA", "paquete": 5, "tipo": "bolsa temple 5 x 5kg" }
     ]
   },
   {
@@ -197,7 +205,7 @@
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
   {
-    "nombre": "PAR BASE PROXILINA",
+    "nombre": "PAR BASE PIROXILINA",
     "marca": "PAR",
     "presentaciones": [{ "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }]
   },
@@ -286,6 +294,20 @@
   },
   {
     "nombre": "TKN TEKNOCOLA ULTRA",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
+    ]
+  },
+  {
+    "nombre": "TKN TEKNOCOLA CLASICA",
+    "marca": "TKN",
+    "presentaciones": [
+      { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
+    ]
+  },
+  {
+    "nombre": "TKN TEKNOCOLA EXTRA",
     "marca": "TKN",
     "presentaciones": [
       { "envase": "1GL", "paquete": 4, "tipo": "paq x 4" }
