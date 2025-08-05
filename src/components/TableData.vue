@@ -11,6 +11,30 @@
     </template>
 
     <template v-else>
+      <div v-for="grupo in groupedArray" :key="grupo.tipo" class="grupo">
+        <h3
+          :class="isColor(grupo.tipo as Producto['tipo']) || 'gray'"
+          style="
+            background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
+            border: 1px solid var(--color-active);
+            padding: .5rem 1rem;
+          "
+        >
+          {{ grupo.tipo }}
+        </h3>
+        <br />
+        <ul>
+          <li v-for="producto in grupo.productos" :key="producto.producto">
+            {{ producto.producto }} ---- {{ producto.bulto }} ---- ({{ producto.calc?.total }})
+          </li>
+        </ul>
+        <br>
+      </div>
+      <br />
+      <br />
+      <hr />
+      <br />
+
       <ul>
         <li class="title-2" v-for="(texto, i) in bultosTextuales" :key="i">{{ texto }}</li>
       </ul>
@@ -57,6 +81,36 @@ const vistaTipo = () => {
   // console.log(data)
 }
 
+const groupedArray = ref<Array<{ tipo: string; productos: Producto[] }>>([])
+
+function viewTipoResult() {
+  const guiaCodigo = localStorage.getItem('guiaActiva')
+  if (!guiaCodigo) return
+
+  const dataRaw = localStorage.getItem(guiaCodigo)
+  if (!dataRaw) return
+
+  const data: Record<string, Producto[]> = JSON.parse(dataRaw)
+  const grouped = new Map<string, Producto[]>()
+
+  for (const productos of Object.values(data)) {
+    for (const producto of productos) {
+      const { tipo, paquete, cantidades, bulto } = producto
+
+      const paq = cantidades.reduce((sum, c) => sum + c.paq, 0)
+      const uni = cantidades.reduce((sum, c) => sum + c.uni, 0)
+
+      const bultoTexto = `${paq} ${tipo} (${paq * paquete})`
+
+      if (!grouped.has(tipo)) grouped.set(tipo, [])
+      grouped.get(tipo)!.push({ ...producto, bulto })
+    }
+  }
+
+  groupedArray.value = Array.from(grouped, ([tipo, productos]) => ({ tipo, productos }))
+  modo.value = 'bulto'
+}
+
 function viewBultos() {
   const guiaCodigo = localStorage.getItem('guiaActiva')
   if (!guiaCodigo) return
@@ -69,18 +123,15 @@ function viewBultos() {
   let totalUnidades = 0
 
   for (const productos of Object.values(data)) {
-    for (const { tipo, paquete, cantidades } of productos) {
-      const paq = cantidades.reduce((sum, c) => sum + c.paq, 0)
-      const uni = cantidades.reduce((sum, c) => sum + c.uni, 0)
-
+    for (const { tipo, paquete, calc } of productos) {
       const group = grouped.get(tipo)
       if (group) {
-        group.totalPaq += paq
+        group.totalPaq += calc?.paq!
       } else {
-        grouped.set(tipo, { tipo, totalPaq: paq, paquete })
+        grouped.set(tipo, { tipo, totalPaq: calc?.paq!, paquete })
       }
 
-      totalUnidades += uni
+      totalUnidades += calc?.uni!
     }
   }
 
@@ -100,11 +151,28 @@ function viewBultos() {
   modo.value = 'bulto'
 }
 
+// import { watch } from 'vue'
+
+// watch(modo, (nuevoModo) => {
+//   if (nuevoModo === 'tipo') {
+//     vistaTipo()
+//   } else if (nuevoModo === 'bulto') {
+//     viewTipoResult()
+//     viewBultos()
+//   }
+// })
+
+
 onMounted(() => {
   vistaTipo()
+  viewTipoResult()
+  viewBultos()
 
   window.addEventListener('localStorageUpdate', vistaTipo)
-  window.addEventListener('vista:bulto', viewBultos)
+  window.addEventListener('vista:bulto', ()=> {
+    viewBultos();
+    viewTipoResult();
+  })
   window.addEventListener('vista:tipo', vistaTipo)
 })
 
@@ -178,4 +246,23 @@ const totalCantidades = computed(() =>
 )
 
 const totalItems = computed(() => items.value.reduce((total, item) => total + item.cantidades.length, 0))
+
+const isColor = (tipo: Producto['tipo']) => {
+  const colores: Record<Producto['tipo'], string> = {
+    'paq x 4': 'green',
+    'paq x 2': 'yellow',
+    'paq x 9': 'orange',
+    'paq x 3': 'orange',
+    'balde 4GL': 'fucsia',
+    'balde 1GL': 'gray',
+    'caja teknocola': 'cyan',
+    'caja x 12': 'blue',
+    'caja temple 25kg': 'red',
+    'caja temple 5 x 5kg': 'red',
+    'bolsa temple 25kg': 'lila',
+    'bolsa temple 5 x 5kg': 'pink',
+  }
+
+  return colores[tipo]
+}
 </script>

@@ -23,7 +23,7 @@
     "presentaciones": [
       { "envase": "1/4GL", "paquete": 9, "tipo": "paq x 9" },
       { "envase": "1GL", "paquete": 2, "tipo": "paq x 2" },
-      { "envase": "4GL", "paquete": 1, "tipo": "balde" }
+      { "envase": "4GL", "paquete": 1, "tipo": "balde 4GL" }
     ]
   },
   {
@@ -289,7 +289,7 @@
     "nombre": "TKN TEKNOCOLA CAJA",
     "marca": "TKN",
     "presentaciones": [
-      { "envase": "CAJA", "paquete": 20, "tipo": "caja teknocola" }
+      { "envase": "CAJA", "paquete": 1, "tipo": "caja teknocola" }
     ]
   },
   {

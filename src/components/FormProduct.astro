@@ -26,10 +26,7 @@
         />
       </button>
       <button class="button" type="button" data-marca="TKN">
-        <img
-          src="https://www.tekno.com.pe/assets/img/logo_tekno.png"
-          alt="tekno"
-        />
+        <img src="https://www.tekno.com.pe/assets/img/logo_tekno.png" alt="tekno" />
       </button>
       <button class="button" type="button" data-marca="FST">
         <img
@@ -48,12 +45,7 @@
     </div>
 
     <label for="envaseInput">Env:</label>
-    <select
-      name="producto"
-      id="envaseSelect"
-      style="grid-column: span 1;"
-      required
-    >
+    <select name="producto" id="envaseSelect" style="grid-column: span 1;" required>
       <option value="">--Env--</option>
     </select>
 
@@ -61,23 +53,14 @@
     <input type="number" name="paquete" id="paquete" required />
 
     <label for="datos" style="align-self: self-start;">Cant.:</label>
-    <textarea
-      id="datos"
-      style="grid-column: 2/-1; height: 18vh"
-      placeholder="Ej:\n14,rojo\n25,azul"
-      required></textarea>
+    <textarea id="datos" style="grid-column: 2/-1; height: 18vh" placeholder="Ej:\n14,rojo\n25,azul" required
+    ></textarea>
 
     <label id="resultado" style="grid-column: 2/-1;">Total Bultos</label>
 
     <div class="actions">
-      <button type="submit" class="button green" id="calcularBtn"
-        >Guardar</button
-      >
-      <button
-        type="button"
-        class="button red"
-        onclick="document.getElementById('formDialog').close()">Cancelar</button
-      >
+      <button type="submit" class="button green" id="calcularBtn">Guardar</button>
+      <button type="button" class="button red" onclick="document.getElementById('formDialog').close()">Cancelar</button>
     </div>
   </form>
 </dialog>
@@ -149,7 +132,7 @@
         height: 100%;
         object-fit: contain;
         filter: grayscale(1);
-        opacity: .4;
+        opacity: 0.4;
       }
 
       &[active] {
@@ -163,16 +146,10 @@
   }
 </style>
 
-<script >
+<script>
+  import { FormManager } from '@/scripts/FormControl'
 
-import { FormManager } from "@/scripts/FormControl";
-
- 
-
-document.addEventListener('astro:page-load', () => {
-  FormManager.init();
-  
-});
-
-
+  document.addEventListener('astro:page-load', () => {
+    FormManager.init()
+  })
 </script>

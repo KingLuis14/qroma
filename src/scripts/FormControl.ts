@@ -1,6 +1,6 @@
 // src/FormManager.ts
 import rawProductos from '@/data/data.json'
-import type { Producto, TipoProducto } from '@/interfaces/Item'
+import type { Cantidad, Producto, TipoProducto } from '@/interfaces/Item'
 
 export class FormManager {
   private static productos = rawProductos
@@ -145,6 +145,8 @@ export class FormManager {
 
       const cantidades = this.procesarTextArea(datosInput.value, +paqueteInput.value)
 
+      const resumenCantidades = this.procesarCantidades(cantidades, +paqueteInput.value)
+
       const activeBtn = document.querySelector<HTMLElement>('button[data-marca][active]')
       const datosFormulario: Producto = {
         producto,
@@ -155,6 +157,17 @@ export class FormManager {
         marca: activeBtn?.dataset.marca ?? '',
         tipo: this.getTipoProducto(producto, envaseSelect.value) as TipoProducto,
         cantidades,
+        calc: {
+          paq: resumenCantidades.paq,
+          uni: resumenCantidades.uni,
+          total: resumenCantidades.totalCantidad
+        },
+        bulto:
+          resumenCantidades.paq > 0
+            ? `${resumenCantidades.paq} ${ this.getTipoProducto(producto, envaseSelect.value) as TipoProducto }${
+                resumenCantidades.uni > 0 ? ' + ' + resumenCantidades.uni + ' uni' : ''
+              }`
+            : `${resumenCantidades.uni} uni`,
       }
 
       const codigoGuia = guiaInput.value
@@ -171,11 +184,8 @@ export class FormManager {
       )
 
       const listaActualizada = yaExisteProductoConMismoTipo
-        ? listaProductosExistentes.map(
-            (productoExistente) =>
-              productoExistente.tipo === datosFormulario.tipo
-                ? datosFormulario 
-                : productoExistente,
+        ? listaProductosExistentes.map((productoExistente) =>
+            productoExistente.tipo === datosFormulario.tipo ? datosFormulario : productoExistente,
           )
         : [...listaProductosExistentes, datosFormulario] // Agrega si no existe
 
@@ -184,6 +194,7 @@ export class FormManager {
       localStorage.setItem(codigoGuia, JSON.stringify(Object.fromEntries(mapaProductosPorNombre)))
 
       window.dispatchEvent(new Event('localStorageUpdate'))
+      window.dispatchEvent(new Event('vista:bulto'))
       this.resetFormulario()
     })
   }
@@ -209,5 +220,26 @@ export class FormManager {
       btn.removeAttribute('active')
     })
     ;(document.getElementById('formDialog') as HTMLDialogElement)?.close()
+  }
+
+  static procesarCantidades(cantidades: Cantidad[], paquete: number) {
+    const resumen = cantidades.reduce(
+      (acc, { cantidad }) => {
+        acc.totalCantidad += cantidad
+        acc.expresion.push(cantidad)
+        return acc
+      },
+      { totalCantidad: 0, expresion: [] as number[] },
+    )
+
+    const paq = Math.floor(resumen.totalCantidad / paquete)
+    const uni = resumen.totalCantidad % paquete
+
+    return {
+      ...resumen,
+      expresion: `${resumen.expresion.join(' + ')} = ${resumen.totalCantidad}`,
+      paq,
+      uni,
+    }
   }
 }
