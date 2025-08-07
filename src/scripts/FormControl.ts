@@ -194,7 +194,6 @@ export class FormManager {
       localStorage.setItem(codigoGuia, JSON.stringify(Object.fromEntries(mapaProductosPorNombre)))
 
       window.dispatchEvent(new Event('localStorageUpdate'))
-      window.dispatchEvent(new Event('vista:bulto'))
       this.resetFormulario()
     })
   }

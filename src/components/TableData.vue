@@ -17,18 +17,38 @@
           style="
             background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
             border: 1px solid var(--color-active);
-            padding: .5rem 1rem;
+            padding: 0.5rem 1rem;
+            width: fit-content;
           "
         >
           {{ grupo.tipo }}
         </h3>
         <br />
-        <ul>
-          <li v-for="producto in grupo.productos" :key="producto.producto">
-            {{ producto.producto }} ---- {{ producto.bulto }} ---- ({{ producto.calc?.total }})
-          </li>
+        <ul style="display: grid; grid-template-columns: 40% 1fr min-content; gap: 0.65rem">
+          <template v-for="producto in grupo.productos" :key="producto.producto">
+            <li>{{ producto.producto }}</li>
+            <li>{{ producto.bulto }}</li>
+            <li>{{ producto.calc?.total }}</li>
+          </template>
         </ul>
+        <br />
+        <hr />
         <br>
+        <ul style="display: grid; grid-template-columns: 40% 1fr min-content; gap: 0.65rem"
+          v-if="
+            sumarTotales(grupo.productos).paq ||
+            sumarTotales(grupo.productos).uni ||
+            sumarTotales(grupo.productos).total
+          "
+        >
+          <li style="grid-column: 2 / span 1;">
+            {{ resumenCantidad(sumarTotales(grupo.productos), grupo.tipo) }}
+          </li>
+          <li>{{ sumarTotales(grupo.productos).total }}</li>
+        </ul>
+
+        <br />
+        <br />
       </div>
       <br />
       <br />
@@ -79,6 +99,33 @@ const vistaTipo = () => {
 
   modo.value = 'tipo'
   // console.log(data)
+}
+
+function resumenCantidad({ paq, uni }: { paq: number; uni: number }, tipo: string): string {
+  if (paq > 0) {
+    return `${paq} ${tipo}${uni > 0 ? ' + ' + uni + ' uni' : ''}`;
+  } else if (uni > 0) {
+    return `${uni} uni`;
+  } else {
+    return '';
+  }
+}
+
+
+function sumarTotales(productos: Producto[]) {
+  let paq = 0
+  let uni = 0
+  let total = 0
+
+  for (const p of productos) {
+    if (p.calc) {
+      paq += p.calc.paq || 0
+      uni += p.calc.uni || 0
+      total += p.calc.total || 0
+    }
+  }
+
+  return { paq, uni, total }
 }
 
 const groupedArray = ref<Array<{ tipo: string; productos: Producto[] }>>([])
@@ -162,16 +209,15 @@ function viewBultos() {
 //   }
 // })
 
-
 onMounted(() => {
   vistaTipo()
-  viewTipoResult()
-  viewBultos()
+  // viewTipoResult()
+  // viewBultos()
 
   window.addEventListener('localStorageUpdate', vistaTipo)
-  window.addEventListener('vista:bulto', ()=> {
-    viewBultos();
-    viewTipoResult();
+  window.addEventListener('vista:bulto', () => {
+    viewBultos()
+    viewTipoResult()
   })
   window.addEventListener('vista:tipo', vistaTipo)
 })
