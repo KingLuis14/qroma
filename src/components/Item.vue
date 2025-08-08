@@ -145,7 +145,6 @@ const isColor = (tipo: Producto['tipo']) => {
 }
 
 .bulto {
-  position: relative;
   background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
   border: 1px solid var(--color-active);
   width: fit-content;
