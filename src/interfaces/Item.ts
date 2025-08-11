@@ -56,4 +56,4 @@ export type ProductoResumen = {
   cantidad: number
 }
 
-export type TipoProducto = 'paq x 9' | 'paq x 4' | 'paq x 2' | 'balde 4GL' | 'paq x 3' | 'balde 1GL' | 'caja temple 25kg' | 'caja temple 5 x 5kg' | 'bolsa temple 25kg' | 'bolsa temple 5 x 5kg' | 'caja x 12'| 'caja teknocola'
+export type TipoProducto = 'paq x 9' | 'paq x 4' | 'paq x 2' | 'balde 4GL' | 'paq x 3' | 'balde 1GL' | 'caja temple 25kg' | 'caja temple 5 x 5kg' | 'bolsa temple 25kg' | 'bolsa temple 5 x 5kg' | 'caja x 12'| 'caja teknocola' | 'unidades'

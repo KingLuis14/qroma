@@ -15,10 +15,14 @@
         <ConsolidatedItem :items="grupo.productos" :tipo="grupo.tipo" />
       </template>
 
-      <ul>
-        <h3>Bultos</h3>
-        <br>
-        <li class="title-2" v-for="(texto, i) in bultosTextuales" :key="i">{{ texto }}</li>
+      <h3>Bultos</h3>
+      <br />
+      <ul class="list title-2">
+        <template v-for="(bulto, i) in bultosTextuales" :key="i">
+          <li>{{ bulto.cantidad }}</li>
+          <li>{{ bulto.tipo }}</li>
+          <li style="margin-left: 1.5rem">({{ bulto.total }})</li>
+        </template>
       </ul>
     </template>
   </div>
@@ -27,19 +31,25 @@
   <br />
   <hr />
   <br />
-  <p class="title">Total general de cantidades: {{ totalCantidades }}</p>
-  <p class="title">Total de items : {{ totalItems }}</p>
+  <p class="title-2">Total general de cantidades: {{ totalCantidades }}</p>
+  <p class="title-2">Total de items : {{ totalItems }}</p>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import type { Producto } from '../interfaces/Item'
+import type { Producto, TipoProducto } from '../interfaces/Item'
 import Item from './Item.vue'
 import ConsolidatedItem from './ConsolidatedItem.vue'
 
+type BultoTexto = {
+  cantidad: number
+  tipo: TipoProducto
+  total: number
+}
+
 const items = ref<Producto[]>([])
 const modo = ref<'tipo' | 'bulto'>('tipo')
-const bultosTextuales = ref<string[]>([])
+const bultosTextuales = ref<BultoTexto[]>([])
 
 const vistaTipo = () => {
   const guiaCodigo = localStorage.getItem('guiaActiva')
@@ -63,7 +73,7 @@ const vistaTipo = () => {
   modo.value = 'tipo'
 }
 
-const groupedArray = ref<Array<{ tipo: string; productos: Producto[] }>>([])
+const groupedArray = ref<Array<{ tipo: TipoProducto; productos: Producto[] }>>([])
 
 function viewTipoResult() {
   const guiaCodigo = localStorage.getItem('guiaActiva')
@@ -72,8 +82,8 @@ function viewTipoResult() {
   const dataRaw = localStorage.getItem(guiaCodigo)
   if (!dataRaw) return
 
-  const data: Record<string, Producto[]> = JSON.parse(dataRaw)
-  const grouped = new Map<string, Producto[]>()
+  const data: Record<TipoProducto, Producto[]> = JSON.parse(dataRaw)
+  const grouped = new Map<TipoProducto, Producto[]>()
 
   for (const productos of Object.values(data)) {
     for (const producto of productos) {
@@ -89,40 +99,36 @@ function viewTipoResult() {
 }
 
 function viewBultos() {
-  const guiaCodigo = localStorage.getItem('guiaActiva')
-  if (!guiaCodigo) return
+  if (!groupedArray.value.length) return
 
-  const dataRaw = localStorage.getItem(guiaCodigo)
-  if (!dataRaw) return
-
-  const data: Record<string, Producto[]> = JSON.parse(dataRaw)
-  const grouped = new Map<string, { tipo: string; totalPaq: number; paquete: number }>()
   let totalUnidades = 0
+  const textoFinal: BultoTexto[] = []
 
-  for (const productos of Object.values(data)) {
-    for (const { tipo, paquete, calc } of productos) {
-      const group = grouped.get(tipo)
-      if (group) {
-        group.totalPaq += calc?.paq!
-      } else {
-        grouped.set(tipo, { tipo, totalPaq: calc?.paq!, paquete })
-      }
+  for (const { tipo, productos } of groupedArray.value) {
+    let totalPaq = 0
+    let paquete = 0
 
-      totalUnidades += calc?.uni!
+    for (const { paquete: paqSize, calc } of productos) {
+      paquete = paqSize
+      totalPaq += calc?.paq || 0
+      totalUnidades += calc?.uni || 0
     }
-  }
 
-  const textoFinal: string[] = []
-
-  for (const { tipo, totalPaq, paquete } of grouped.values()) {
     if (totalPaq > 0) {
-      textoFinal.push(`${totalPaq} ${tipo}    (${totalPaq * paquete})`)
-
+      textoFinal.push({
+        cantidad: totalPaq,
+        tipo,
+        total: totalPaq * paquete,
+      })
     }
   }
 
   if (totalUnidades > 0) {
-    textoFinal.push(`${totalUnidades} unidades     (${totalUnidades})`)
+    textoFinal.push({
+      cantidad: totalUnidades,
+      tipo: 'unidades',
+      total: totalUnidades,
+    })
   }
 
   bultosTextuales.value = textoFinal
@@ -134,8 +140,8 @@ onMounted(() => {
 
   window.addEventListener('localStorageUpdate', vistaTipo)
   window.addEventListener('vista:bulto', () => {
-    viewBultos()
     viewTipoResult()
+    viewBultos()
   })
   window.addEventListener('vista:tipo', vistaTipo)
 })
@@ -208,3 +214,11 @@ const totalCantidades = computed(() =>
 
 const totalItems = computed(() => items.value.reduce((total, item) => total + item.cantidades.length, 0))
 </script>
+
+<style scoped>
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  gap: 0.75rem;
+}
+</style>

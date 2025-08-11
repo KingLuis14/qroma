@@ -1,6 +1,6 @@
 <template>
   <div class="item" :class="isColor(tipo as Producto['tipo']) || 'gray'">
-    <h3 style="color: gray; margin-bottom: .5rem;">{{ tipo }}</h3>
+    <h3 style="color: gray; margin-bottom: 0.5rem">{{ tipo }}</h3>
     <ul class="list">
       <template v-for="item in items" :key="item.producto">
         <li>{{ item.producto }}</li>
@@ -10,30 +10,26 @@
     </ul>
     <hr />
 
-    <ul v-if="sumarTotales(items).total" class="list-totales">
-      <li style="grid-column: 2 / span 1" class="bulto">{{ resumenCantidad(sumarTotales(items), tipo) }}</li>
-      <li>{{ sumarTotales(items).total }}</li>
+    <ul class="list-totales">
+      <li style="grid-column: 2 / span 1" class="bulto">
+        {{ FormManager.formatBulto(totals.paq, totals.uni, tipo) }}
+      </li>
+      <li>{{ totals.total }}</li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Producto } from '@/interfaces/Item'
+import type { Producto, TipoProducto } from '@/interfaces/Item'
+import { FormManager } from '@/scripts/FormControl'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   items: Producto[]
-  tipo: string
+  tipo: TipoProducto
 }>()
 
-function resumenCantidad({ paq, uni }: { paq: number; uni: number }, tipo: string): string {
-  if (paq > 0) {
-    return `${paq} ${tipo}${uni > 0 ? ' + ' + uni + ' uni' : ''}`
-  } else if (uni > 0) {
-    return `${uni} uni`
-  } else {
-    return ''
-  }
-}
+const totals = computed(() => sumarTotales(props.items))
 
 function sumarTotales(productos: Producto[]) {
   let paq = 0
@@ -65,6 +61,7 @@ const isColor = (tipo: Producto['tipo']) => {
     'caja temple 5 x 5kg': 'red',
     'bolsa temple 25kg': 'lila',
     'bolsa temple 5 x 5kg': 'pink',
+    'unidades' : 'gray'
   }
 
   return colores[tipo]
@@ -78,7 +75,7 @@ const isColor = (tipo: Producto['tipo']) => {
   border-left: 5px solid var(--color-active, transparent);
   display: grid;
   margin-bottom: 1.5rem;
-  gap: .85rem;
+  gap: 0.85rem;
   background-color: #0f1011;
 }
 
@@ -87,13 +84,16 @@ const isColor = (tipo: Producto['tipo']) => {
   display: grid;
   grid-template-columns: 38% 1fr min-content;
   gap: 0.65rem;
+  /* font-size: .75rem; */
+  /* background-color: rgba(220, 20, 60, 0.354); */
 }
 
-.bulto{
-    background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
+.bulto {
+  background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
   border: 1px solid var(--color-active);
-  width: fit-content;
+  width: max-content;
   padding: 0.25em 0.75em;
   margin-left: -0.75rem;
+  
 }
 </style>

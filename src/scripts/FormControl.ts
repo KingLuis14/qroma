@@ -90,6 +90,13 @@ export class FormManager {
     return resultado
   }
 
+  static formatBulto (paq: number, uni: number, type: TipoProducto): string {
+    if (paq > 0) {
+      return `${paq} ${type}${uni > 0 ? ` + ${uni} uni` : ''}`
+    }
+    return `${uni} uni`
+  }
+
   static init() {
     const productoSelect = this.$('productoSelect') as HTMLSelectElement
     const envaseSelect = this.$('envaseSelect') as HTMLSelectElement
@@ -130,68 +137,57 @@ export class FormManager {
       resultadoInput.textContent = `Total Bultos : ${sumandos.join(' + ')} = ${total}`
     })
 
-    this.$('calcularBtn')?.addEventListener('click', (e) => {
+    this.$('calcularBtn')?.addEventListener('click', (e: MouseEvent) => {
       e.preventDefault()
 
-      const form = document.querySelector('#formDialog form') as HTMLFormElement
-      if (!form.checkValidity()) {
-        form.reportValidity()
-        console.log('erro')
-
+      const formEl = document.querySelector<HTMLFormElement>('#formDialog form')
+      if (!formEl?.checkValidity()) {
+        formEl?.reportValidity()
         return
       }
-      const producto = productoSelect.value
-      if (!producto) return
 
-      const cantidades = this.procesarTextArea(datosInput.value, +paqueteInput.value)
+      const product = productoSelect.value
+      if (!product) return
 
-      const resumenCantidades = this.procesarCantidades(cantidades, +paqueteInput.value)
+      const pkgValue = +paqueteInput.value
+      const textValue = datosInput.value.trim()
+      const typeProduct = this.getTipoProducto(product, envaseSelect.value) as TipoProducto
+
+      const quantities = this.procesarTextArea(textValue, pkgValue)
+      const summary = this.procesarCantidades(quantities, pkgValue)
 
       const activeBtn = document.querySelector<HTMLElement>('button[data-marca][active]')
-      const datosFormulario: Producto = {
-        producto,
+      const formData: Producto = {
+        producto: product,
         envase: envaseSelect.value,
-        paquete: +paqueteInput.value,
-        img: activeBtn?.querySelector('img')?.src ?? '',
-        cantidadTextArea: datosInput.value.trim(),
+        paquete: pkgValue,
+        img: activeBtn?.querySelector<HTMLImageElement>('img')?.src ?? '',
+        cantidadTextArea: textValue,
         marca: activeBtn?.dataset.marca ?? '',
-        tipo: this.getTipoProducto(producto, envaseSelect.value) as TipoProducto,
-        cantidades,
+        tipo: typeProduct,
+        cantidades: quantities,
         calc: {
-          paq: resumenCantidades.paq,
-          uni: resumenCantidades.uni,
-          total: resumenCantidades.totalCantidad
+          paq: summary.paq,
+          uni: summary.uni,
+          total: summary.totalCantidad,
         },
-        bulto:
-          resumenCantidades.paq > 0
-            ? `${resumenCantidades.paq} ${ this.getTipoProducto(producto, envaseSelect.value) as TipoProducto }${
-                resumenCantidades.uni > 0 ? ' + ' + resumenCantidades.uni + ' uni' : ''
-              }`
-            : `${resumenCantidades.uni} uni`,
+       bulto: this.formatBulto(summary.paq, summary.uni, typeProduct),
       }
 
-      const codigoGuia = guiaInput.value
-      const datosEnLocalStorage = localStorage.getItem(codigoGuia)
+      const guideCode = guiaInput.value
+      const storedData = localStorage.getItem(guideCode)
 
-      const mapaProductosPorNombre = datosEnLocalStorage
-        ? new Map(Object.entries(JSON.parse(datosEnLocalStorage)))
-        : new Map()
+      const productsMap = storedData
+        ? new Map<string, Producto[]>(Object.entries(JSON.parse(storedData)))
+        : new Map<string, Producto[]>()
 
-      const listaProductosExistentes: Producto[] = mapaProductosPorNombre.get(producto) || []
+      const existingList = productsMap.get(product) || []
+      const updatedList = existingList.some((p) => p.tipo === formData.tipo)
+        ? existingList.map((p) => (p.tipo === formData.tipo ? formData : p))
+        : [...existingList, formData]
 
-      const yaExisteProductoConMismoTipo = listaProductosExistentes.some(
-        (productoExistente) => productoExistente.tipo === datosFormulario.tipo,
-      )
-
-      const listaActualizada = yaExisteProductoConMismoTipo
-        ? listaProductosExistentes.map((productoExistente) =>
-            productoExistente.tipo === datosFormulario.tipo ? datosFormulario : productoExistente,
-          )
-        : [...listaProductosExistentes, datosFormulario] // Agrega si no existe
-
-      mapaProductosPorNombre.set(producto, listaActualizada)
-
-      localStorage.setItem(codigoGuia, JSON.stringify(Object.fromEntries(mapaProductosPorNombre)))
+      productsMap.set(product, updatedList)
+      localStorage.setItem(guideCode, JSON.stringify(Object.fromEntries(productsMap)))
 
       window.dispatchEvent(new Event('localStorageUpdate'))
       this.resetFormulario()

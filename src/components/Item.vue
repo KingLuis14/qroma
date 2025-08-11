@@ -75,6 +75,7 @@ const isColor = (tipo: Producto['tipo']) => {
     'caja temple 5 x 5kg': 'red',
     'bolsa temple 25kg': 'lila',
     'bolsa temple 5 x 5kg': 'pink',
+    'unidades' : 'gray'
   }
 
   return colores[tipo]
