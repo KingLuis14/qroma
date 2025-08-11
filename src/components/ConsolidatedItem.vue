@@ -91,9 +91,10 @@ const isColor = (tipo: Producto['tipo']) => {
 .bulto {
   background-color: color-mix(in srgb, var(--color-active) 17%, transparent);
   border: 1px solid var(--color-active);
-  width: max-content;
+  /* width: max-content; */
   padding: 0.25em 0.75em;
   margin-left: -0.75rem;
+  
   
 }
 </style>
