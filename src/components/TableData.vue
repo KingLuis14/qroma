@@ -218,7 +218,7 @@ const totalItems = computed(() => items.value.reduce((total, item) => total + it
 <style scoped>
 .list {
   display: grid;
-  grid-template-columns: repeat(3, min-content);
+  grid-template-columns: repeat(3, max-content);
   gap: 0.75rem;
 }
 </style>
