@@ -237,4 +237,24 @@ export class FormManager {
       uni,
     }
   }
+
+  static isColor(tipo: Producto['tipo']){
+  const colores: Record<Producto['tipo'], string> = {
+    'paq x 4': 'green',
+    'paq x 2': 'yellow',
+    'paq x 9': 'orange',
+    'paq x 3': 'orange',
+    'balde 4GL': 'fucsia',
+    'balde 1GL': 'gray',
+    'caja teknocola': 'cyan',
+    'caja x 12': 'blue',
+    'caja temple 25kg': 'red',
+    'caja temple 5 x 5kg': 'red',
+    'bolsa temple 25kg': 'lila',
+    'bolsa temple 5 x 5kg': 'pink',
+    'unidades' : 'gray'
+  }
+
+  return colores[tipo]
+}
 }

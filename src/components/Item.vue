@@ -1,14 +1,13 @@
 <template>
   <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; margin-bottom: 1rem">
     <input type="checkbox" @change="toggleActivo" :checked="activo" />
-    <div class="item" :class="[isColor(item.tipo) || 'gray', { activo: activo }]">
+    <div class="item" :class="[FormManager.isColor(item.tipo) || 'gray', { activo: activo }]">
       <div class="item__content">
         <ul class="item__list">
           <li style="font-weight: 600">{{ item.producto }} {{ item.envase }}</li>
           <li>Cantidad: {{ resumenCantidades.expresion }}</li>
           <li class="bulto">
             {{ item.bulto }}
-           
           </li>
         </ul>
 
@@ -22,64 +21,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { Cantidad, Producto } from '../interfaces/Item'
+import { FormManager } from '@/scripts/FormControl'
 
-const props = defineProps<{
-  item: Producto
-}>()
-
-const emit = defineEmits<{
-  (e: 'edit', item: Producto): void
-  (e: 'delete', item: Producto): void
-}>()
+const props = defineProps<{ item: Producto }>()
 
 const activo = ref(false)
 
 const procesarCantidades = (cantidades: Cantidad[]) => {
-  const resumen = cantidades.reduce(
-    (acc, { paq, uni, cantidad }) => {
-      acc.totalPaq += paq
-      acc.totalUni += uni
-      acc.totalCantidad += cantidad
-      acc.expresion.push(cantidad)
-      return acc
-    },
-    { totalPaq: 0, totalUni: 0, totalCantidad: 0, expresion: [] as number[] },
-  )
-
-  return {
-    ...resumen,
-    expresion: `${resumen.expresion.join(' + ')} = ${resumen.totalCantidad}`,
-  }
+  const totalCantidad = cantidades.reduce((sum, { cantidad }) => sum + cantidad, 0)
+  const expresion = `${cantidades.map((c) => c.cantidad).join(' + ')} = ${totalCantidad}`
+  return { expresion }
 }
 
-// 🔁 Recalcular cuando cambian los props reactivos
 const resumenCantidades = computed(() => procesarCantidades(props.item.cantidades))
+
+const STORAGE_KEY = 'productos_activos'
+const productoId = `${props.item.producto}__${props.item.envase}`
+
+const getProductosActivos = (): Set<string> => new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
+
+const saveProductosActivos = (activos: Set<string>) => localStorage.setItem(STORAGE_KEY, JSON.stringify([...activos]))
 
 const toggleActivo = () => {
   activo.value = !activo.value
+  const activos = getProductosActivos()
+  activo.value ? activos.add(productoId) : activos.delete(productoId)
+  saveProductosActivos(activos)
 }
 
-const isColor = (tipo: Producto['tipo']) => {
-  const colores: Record<Producto['tipo'], string> = {
-    'paq x 4': 'green',
-    'paq x 2': 'yellow',
-    'paq x 9': 'orange',
-    'paq x 3': 'orange',
-    'balde 4GL': 'fucsia',
-    'balde 1GL': 'gray',
-    'caja teknocola': 'cyan',
-    'caja x 12': 'blue',
-    'caja temple 25kg': 'red',
-    'caja temple 5 x 5kg': 'red',
-    'bolsa temple 25kg': 'lila',
-    'bolsa temple 5 x 5kg': 'pink',
-    'unidades' : 'gray'
-  }
-
-  return colores[tipo]
-}
+onMounted(() => {
+  activo.value = getProductosActivos().has(productoId)
+})
 </script>
 
 <style scoped>

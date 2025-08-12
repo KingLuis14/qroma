@@ -73,7 +73,7 @@ const vistaTipo = () => {
   modo.value = 'tipo'
 }
 
-const groupedArray = ref<Array<{ tipo: TipoProducto; productos: Producto[] }>>([])
+const groupedArray = ref<Array<{ tipo: TipoProducto; productos: Producto[] }>>([]);
 
 function viewTipoResult() {
   const guiaCodigo = localStorage.getItem('guiaActiva')
