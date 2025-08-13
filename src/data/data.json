@@ -162,16 +162,24 @@
     ]
   },
   {
-    "nombre": "CPP TEMPLE PATO 25KG CAJA",
+    "nombre": "CPP TEMPLE SINOLIT 25KG CAJA",
     "marca": "CPP",
     "presentaciones": [
       { "envase": "CAJA", "paquete": 1, "tipo": "caja temple 25kg" }
     ]
   },
   {
-    "nombre": "CPP TEMPLE PATO 5 x 5KG CAJA",
+    "nombre": "CPP TEMPLE SINOLIT 5 x 5KG CAJA",
     "marca": "CPP",
     "presentaciones": [{ "envase": "CAJA", "paquete": 1, "tipo": "caja temple 5 x 5kg" }]
+  },
+  {
+    "nombre": "LIJAS",
+    "marca": "CPP",
+    "presentaciones": [
+      { "envase": "PAQ", "paquete": 1, "tipo": "lija" }
+     
+    ]
   },
   {
     "nombre": "FST ESMALTE SUPERIOR",

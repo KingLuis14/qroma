@@ -15,7 +15,7 @@
         <ConsolidatedItem :items="grupo.productos" :tipo="grupo.tipo" />
       </template>
 
-      <h3>Bultos</h3>
+      <h3 class="title-2">Bultos</h3>
       <br />
       <ul class="list title-2">
         <template v-for="(bulto, i) in bultosTextuales" :key="i">
@@ -219,6 +219,6 @@ const totalItems = computed(() => items.value.reduce((total, item) => total + it
 .list {
   display: grid;
   grid-template-columns: repeat(3, max-content);
-  gap: 0.75rem;
+  gap: 0.75rem 1.2rem;
 }
 </style>

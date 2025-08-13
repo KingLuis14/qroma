@@ -90,12 +90,8 @@ onMounted(() => {
   flex-direction: column;
   height: 100%;
   gap: 0.5rem;
-  /* background-color: rgba(172, 255, 47, 0.371); */
 }
-.item__list > li:last-child {
-  /* margin-top: auto; */
-  /* text-align: right; */
-}
+
 .item__controls {
   position: absolute;
   top: 0;
@@ -144,8 +140,6 @@ onMounted(() => {
     color: #fff;
     font-weight: bold;
     font-size: 0.85rem;
-    /* border-radius: 0 0.5em 0.5em 0; */
-    /* content: attr(data-type); */
     background-color: var(--type-color);
     transform: rotate(-10deg);
     transform-origin: left bottom;
